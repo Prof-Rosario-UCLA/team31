@@ -1,0 +1,39 @@
+{
+    "name": "nutri-bruin",
+    "version": "1.0.0",
+    "description": "UCLA Dining Nutrition Enhancement Platform - CS144 Final Project",
+    "private": true,
+    "workspaces": [
+      "frontend",
+      "backend"
+    ],
+    "scripts": {
+      "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+      "dev:frontend": "cd frontend && npm run dev",
+      "dev:backend": "cd backend && npm run dev",
+      "build": "npm run build:frontend && npm run build:backend",
+      "build:frontend": "cd frontend && npm run build",
+      "build:backend": "cd backend && npm run build",
+      "test": "npm run test:frontend && npm run test:backend",
+      "test:frontend": "cd frontend && npm test",
+      "test:backend": "cd backend && npm test",
+      "deploy": "./scripts/deploy/deploy.sh",
+      "deploy:staging": "./scripts/deploy/deploy-staging.sh"
+    },
+    "devDependencies": {
+      "concurrently": "^8.2.0"
+    },
+    "engines": {
+      "node": ">=18.0.0",
+      "npm": ">=9.0.0"
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/your-username/nutri-bruin.git"
+    },
+    "authors": [
+      "Ryan Phua <rphua@g.ucla.edu>",
+      "Andre Mai <andre.d.mai@gmail.com>"
+    ],
+    "license": "MIT"
+  }

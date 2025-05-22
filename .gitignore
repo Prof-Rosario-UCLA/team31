@@ -88,3 +88,5 @@ backend/src/wasm/*/build/
 # Build artifacts
 dist/
 build/
+
+package-lock.json

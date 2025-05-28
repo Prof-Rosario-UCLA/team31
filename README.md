@@ -591,7 +591,42 @@ User                    Server                   Database
 
 
 
-#### **Security Middleware Stack**
+## IV) **Auth Middleware \& Controllers**
+
+```bash
+# Overall, the sequence diagram below shows how a client request is handled by our implementation
+Browser → Middleware → Controller → Database → Controller → Browser
+
+# Request flows through middleware indicated by []
+Request → [Cookie Parser:(read cookies)] → [Authentication: (is logged in?)] → [Validation: (are data in/outputs valid?)] → Controller → Response:Client
+        
+# Example workflow in our app
+# When user tries to view their profile:
+# Step 1. Cookie Parser Middleware runs first
+app.use(cookieParser());  
+
+# Step 2. Authentication Middleware runs second
+app.get('/api/profile', authenticate, ProfileController.getProfile);
+          
+
+# Step 3: When inside authenticate middleware:
+function authenticate(req, res, next) {
+    # 3.1 Check if user has valid ticket (JWT token)
+    if (!req.cookies.auth_token) {
+        return res.status(401).json({ error: "No ticket!" });
+    }
+    
+    # 3.2 Verify user login information
+    const userId = verifyToken(req.cookies.auth_token);
+    
+    # 3.3 Attach user info to request
+    req.user = { userId };
+    
+    # 3.4 next() passes control to the next middleware function, aka. controller
+    next();  // 
+}
+```
+
 ```typescript
 // Security middleware pipeline
 app.use(helmet({

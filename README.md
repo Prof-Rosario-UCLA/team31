@@ -294,23 +294,7 @@ npm test -- --testPathPattern=integration
 - **Authentication failed**: Verify username/password in connection string
 - **Cloud Shell**: IPs may change; use "Allow from Anywhere" option
 
-#### ii. **Redis Cloud Setup**
-```bash
-1. Create Redis Cloud database
-2. Note the endpoint and password
-3. Add Redis URL to .env file
-```
-
-#### iii. **Local Database (Alternative)**
-```bash
-# Using Docker for local development
-docker run -d -p 27017:27017 --name mongodb mongo:6.0
-docker run -d -p 6379:6379 --name redis redis:7.0
-
-# Update .env to use local instances
-MONGODB_URI=mongodb://localhost:27017/nutri-bruin
-REDIS_URL=redis://localhost:6379
-```
+---
 
 #### iv. **API Keys Setup**
 

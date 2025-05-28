@@ -238,14 +238,58 @@ npm run dev
 
 ## 🏗 Development Setup
 
-
 #### i. **MongoDB Atlas Setup**
 ```bash
-1. Create MongoDB Atlas cluster
+1. Create MongoDB Atlas cluster at https://cloud.mongodb.com
 2. Create database user with read/write permissions
-3. Whitelist your IP address (or 0.0.0.0/0 for development)
-4. Get connection string and add to .env
+3. Whitelist your IP address (0.0.0.0/0 for development)
+4. Get connection string: mongodb+srv://username:password@cluster.mongodb.net
+5. Add to .env as MONGODB_URI with your database name appended
 ```
+
+**Connection String Format:**
+```env
+MONGODB_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/nutri-bruin?retryWrites=true&w=majority
+```
+
+**Quick Connection Test:** (see `backend/stc/tests/integration/mongodb.test.ts` for full jest implementation)
+```bash
+# Test MongoDB connection
+cd backend
+node -e "require('mongoose').connect(process.env.MONGODB_URI).then(() => console.log('✅ Connected!')).catch(e => console.error('❌ Failed:', e.message))"
+```
+
+#### ii. **Redis Cloud Setup**
+```bash
+1. Create Redis Cloud database
+2. Note the endpoint and password
+3. Add Redis URL to .env file
+```
+
+#### iii. **Local Database (Alternative)**
+```bash
+# Using Docker for local development
+docker run -d -p 27017:27017 --name mongodb mongo:6.0
+docker run -d -p 6379:6379 --name redis redis:7.0
+
+# Update .env to use local instances
+MONGODB_URI=mongodb://localhost:27017/nutri-bruin
+REDIS_URL=redis://localhost:6379
+```
+
+#### iv. **Database Testing**
+```bash
+# Run MongoDB integration tests
+npm run test:db
+
+# Quick health check
+curl http://localhost:8080/api/health
+```
+
+**Common MongoDB Issues:**
+- **Connection timeout**: Check IP whitelist in Atlas (use 0.0.0.0/0 for dev)
+- **Authentication failed**: Verify username/password in connection string
+- **Cloud Shell**: IPs may change; use "Allow from Anywhere" option
 
 #### ii. **Redis Cloud Setup**
 ```bash

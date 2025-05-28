@@ -295,8 +295,8 @@ npm test -- --testPathPattern=integration
 - **Cloud Shell**: IPs may change; use "Allow from Anywhere" option
 
 ---
-
-#### iv. **API Keys Setup**
+#TODO: 1
+#### iv. ** API Keys Setup**
 
 - **OpenAI API Key**
     ```bash
@@ -369,18 +369,20 @@ Our GitHub Actions workflow automatically:
 - `deploy-staging.yml`: Staging environment deployment
 - `deploy-production.yml`: Production deployment
 
+---
 
-## 🧠 Architecture Deep Dive
 
-### **Frontend Architecture Decisions**
+# 🧠 Architecture Deep Dive
 
-#### **React + TypeScript Choice**
+## **I) Frontend Architecture Decisions**
+
+#### i) **React + TypeScript Choice**
 - **Type Safety**: Compile-time error detection, better IDE support
 - **Component Reusability**: Modular design with props interfaces
 - **Performance**: Virtual DOM optimization, concurrent features
 - **Ecosystem**: Rich library ecosystem, extensive community support
 
-#### **State Management: Zustand vs Redux**
+#### ii) **State Management: Zustand vs Redux**
 ```typescript
 // Why Zustand over Redux
 interface AuthStore {
@@ -407,7 +409,7 @@ const useAuthStore = create<AuthStore>((set) => ({
 - **Learning Curve**: Simpler for 2-person team
 - **Performance**: No unnecessary re-renders
 
-#### **Styling: Tailwind CSS Strategy**
+#### iii) **Styling: Tailwind CSS Strategy**
 ```css
 /* Utility-first approach with component classes */
 @layer components {
@@ -429,9 +431,9 @@ const useAuthStore = create<AuthStore>((set) => ({
 - **Responsive Design**: Mobile-first breakpoint system
 - **UCLA Branding**: Custom color palette integration
 
-### **Backend Architecture Decisions**
+## II) **Backend Architecture Decisions**
 
-#### **Express.js + TypeScript Architecture**
+#### i) **Express.js + TypeScript Architecture**
 ```typescript
 // Controller → Service → Repository pattern
 export class RestaurantController {
@@ -452,7 +454,7 @@ export class RestaurantController {
 - **Middleware Pipeline**: Security, validation, error handling
 - **Error Handling**: Centralized error middleware
 
-#### **Database Design Philosophy**
+#### ii) **Database Design**
 
 **MongoDB Choice Justification:**
 ```javascript
@@ -479,7 +481,7 @@ const nutritionSchema = {
 - **Aggregation Pipeline**: Complex nutrition analysis
 - **Horizontal Scaling**: Future growth capabilities
 
-#### **Caching Strategy: Redis Implementation**
+#### iii) **Caching Strategy: Redis Implementation**
 ```typescript
 // Hierarchical caching with TTL
 const CacheKeys = {
@@ -497,24 +499,97 @@ const CacheTTL = {
 };
 ```
 
-### **Security Architecture**
+## III) **Authentication Flow Diagram**
 
-#### **Authentication Flow**
-```mermaid
-sequenceDiagram
-    participant C as Client
-    participant S as Server
-    participant DB as Database
-    
-    C->>S: POST /api/auth/login
-    S->>DB: Verify credentials
-    DB->>S: User data
-    S->>S: Generate JWT
-    S->>C: Set HttpOnly cookie
-    C->>S: Subsequent requests (cookie auto-sent)
-    S->>S: Verify JWT from cookie
-    S->>C: Protected resource
+**Overview**: NutriBruin uses JWT tokens stored in HTTP-only cookies for stateless, secure authentication.
+
+![alt text](./backend/static/images/auth_flow_diagram.png)
+
+
+## i) **User Registration/Login Flow**
+
 ```
+User                    Server                   Database
+ |                        |                         |
+ |--POST /auth/login----->|                         |
+ |  {email, password}     |                         |
+ |                        |----Check password------>|
+ |                        |<----User data-----------|
+ |                        |                         |
+ |                    Generate JWT                  |
+ |                    userId: "abc123"              |
+ |                    expires: 7 days               |
+ |                        |                         |
+ |<---HTTP-Only Cookie----|                         |
+ |   auth_token=JWT       |                         |
+```
+
+**Flow Explanation**:
+
+1. **Login Request**: User submits email/password to `/api/auth/login`
+
+2. **Validation**: Server queries MongoDB and verifies password using bcrypt
+
+3. **JWT Creation**: On success, generates token containing:
+   - `userId`: User's MongoDB ObjectId
+   - `exp`: 7-day expiration timestamp
+   - Signed with `JWT_SECRET` to prevent tampering
+
+4. **Cookie Storage**: Token set as HTTP-only cookie with:
+   - `httpOnly`: true (no JavaScript access)
+   - `secure`: true (HTTPS in production)
+   - `sameSite`: 'strict' (CSRF protection)
+
+5. User session cached in Redis for fast lookups
+
+## ii) **Authenticated Request Flow**
+
+```
+User                    Server                   Database
+ |                        |                         |
+ |--GET /api/profile----->|                         |
+ |  Cookie: auth_token    |                         |
+ |                        |                         |
+ |                   Verify JWT                     |
+ |                   Extract userId                 |
+ |                        |                         |
+ |                        |----Get user data------->|
+ |                        |<----User profile--------|
+ |<----User profile-------|                         |
+```
+
+**Flow Explanation**:
+
+1. **Request**: Browser automatically sends `auth_token` cookie with protected route requests
+
+2. **Middleware Verification**: 
+   ```javascript
+   const token = req.cookies?.auth_token;
+   const decoded = jwt.verify(token, JWT_SECRET);
+   ```
+
+3. **Validation Checks**:
+   - Signature verification (token integrity)
+   - Expiration check (within 7 days)
+   - Extract userId from payload
+
+4. **User Context**: Middleware attaches user to request:
+   ```javascript
+   req.user = { userId: decoded.userId };
+   ```
+
+5. **Data Retrieval**: 
+   - Check Redis cache first
+   - Fall back to MongoDB if needed
+   - Return profile (excluding password)
+
+**Security Benefits**:
+- **XSS Protection**: HTTP-only cookies prevent JavaScript token access
+- **CSRF Protection**: SameSite attribute blocks cross-origin requests
+- **Limited Exposure**: 7-day expiration reduces compromise window
+- **Stateless**: Each request independently verified
+
+
 
 #### **Security Middleware Stack**
 ```typescript

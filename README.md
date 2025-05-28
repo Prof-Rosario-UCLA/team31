@@ -261,29 +261,32 @@ node -e "require('mongoose').connect(process.env.MONGODB_URI).then(() => console
 
 #### ii. **Redis Cloud Setup**
 ```bash
-1. Create Redis Cloud database
-2. Note the endpoint and password
-3. Add Redis URL to .env file
-```
+1. Initialize Redis Cloud
+  - new account at https://redis.com/try-free/
+  - new database (30MB free tier)
+  - regiuon: `us-central1` (matches Google Cloud)
+2. From dashboard, copy credentials:
+   - Host: redis-xxxxx.c1.us-central1-2.gce.redns.redis-cloud.com
+   - Port: 10871
+   - Username: default 
+   - Password: your-specific-password (My Databases > Database Configuration > Security > Default user password)
+3. Environment Variables - update `.env`
+    ```bash
+    # Add to backend/.env
+    REDIS_HOST=redis-xxxxx.c1.us-central1-2.gce.redns.redis-cloud.com
+    REDIS_PORT=10871
+    REDIS_USERNAME=default
+    REDIS_PASSWORD=your-redis-password
+    ```
 
-#### iii. **Local Database (Alternative)**
-```bash
-# Using Docker for local development
-docker run -d -p 27017:27017 --name mongodb mongo:6.0
-docker run -d -p 6379:6379 --name redis redis:7.0
-
-# Update .env to use local instances
-MONGODB_URI=mongodb://localhost:27017/nutri-bruin
-REDIS_URL=redis://localhost:6379
-```
-
-#### iv. **Database Testing**
+#### iii. **Database Integration Testing**
 ```bash
 # Run MongoDB integration tests
-npm run test:db
-
-# Quick health check
-curl http://localhost:8080/api/health
+npm run test:mongo
+# Run Redis integration tests
+npm run test:redis
+# Run all integration tests 
+npm test -- --testPathPattern=integration
 ```
 
 **Common MongoDB Issues:**

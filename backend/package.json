@@ -10,8 +10,8 @@
         "test": "jest --runInBand",
         "test:watch": "jest --watch",
         "test:coverage": "jest --coverage",
-        "test:db": "jest src/tests/integration/mongodb.test.ts --runInBand",
-        "test:quick": "node test-mongo.js",
+        "test:mongo": "jest src/tests/integration/mongodb.test.ts --runInBand",
+        "test:redis": "jest src/tests/integration/redis.test.ts --runInBand",
         "lint": "eslint src --ext .ts",
         "format": "prettier --write \"src/**/*.ts\""
     },

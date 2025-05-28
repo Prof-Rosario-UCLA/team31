@@ -260,7 +260,7 @@ node -e "require('mongoose').connect(process.env.MONGODB_URI).then(() => console
 ```
 
 #### ii. **Redis Cloud Setup**
-```bash
+
 1. Initialize Redis Cloud
   - new account at https://redis.com/try-free/
   - new database (30MB free tier)

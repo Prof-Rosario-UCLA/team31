@@ -1,4 +1,4 @@
-# NutriBruin ~ cs144 final project for spring 25
+# CS144 Final Project ~ spring 25
 ![NutriBruin](https://github.com/user-attachments/assets/57a698d1-50ad-439f-aae0-aab7f53e9a78)
 
 [![](https://github.com/your-username/team31/workflows/CI%20Pipeline/badge.svg)](https://github.com/your-username/team31/actions)
@@ -732,6 +732,6 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 
 ---
 
-*~ UCLA CS144 • Spring 2025 • Prof Ryan Rosario • Team 31 ~*
+*UCLA CS144 • Spring 2025 • Prof Ryan Rosario • Team 31*
 
 

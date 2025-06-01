@@ -1,5 +1,5 @@
 # CS144 Final Project ~ spring 25
-![NutriBruin](https://github.com/user-attachments/assets/57a698d1-50ad-439f-aae0-aab7f53e9a78)
+<img width="1211" alt="Screenshot 2025-06-01 at 4 25 30 PM" src="https://github.com/user-attachments/assets/ba4eac50-3fb0-447e-be67-a4da7f70311e" />
 
 [![](https://github.com/your-username/team31/workflows/CI%20Pipeline/badge.svg)](https://github.com/your-username/team31/actions)
 [![Deployment Status](https://img.shields.io/badge/deployment-Google%20App%20Engine-blue)](https://team31-cs144.appspot.com)

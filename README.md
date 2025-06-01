@@ -1,6 +1,5 @@
-# NutriBruin — your personalized AI nutrition companion for UCLA dining 
-
-*\~ a cs144 web applications final project for spring 25*
+# NutriBruin ~ cs144 final project for spring 25
+![NutriBruin](https://github.com/user-attachments/assets/57a698d1-50ad-439f-aae0-aab7f53e9a78)
 
 [![](https://github.com/your-username/team31/workflows/CI%20Pipeline/badge.svg)](https://github.com/your-username/team31/actions)
 [![Deployment Status](https://img.shields.io/badge/deployment-Google%20App%20Engine-blue)](https://team31-cs144.appspot.com)

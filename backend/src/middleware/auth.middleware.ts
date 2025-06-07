@@ -22,16 +22,16 @@ export const authenticate = async (
   try {
     // Get token from cookie
     const token = req.cookies?.auth_token;
-
+    // no jwt provided case
     if (!token) {
       res.status(401).json({ error: 'No authentication token provided' });
       return;
     }
 
-    // Verify token
+    // Verify token using .verify()
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
     
-    // Attach user to request object
+    // Attach user to request object once verified, so all routes can see that user is authed
     req.user = { userId: decoded.userId };
     
     next();
@@ -46,7 +46,7 @@ export const authenticate = async (
   }
 };
 
-// Optional authentication - doesn't fail if no token
+// looser auth for dev
 export const optionalAuth = async (
   req: Request,
   res: Response,
@@ -63,6 +63,7 @@ export const optionalAuth = async (
     next();
   } catch (error) {
     // Invalid token - proceed without authentication
+    console.error('JWT not provided or invalid!')
     next();
   }
 };

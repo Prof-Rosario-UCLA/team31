@@ -3,6 +3,8 @@ import User from '../models/User.model';
 import { generateToken, setTokenCookie, clearTokenCookie } from '../config/jwt';
 import { CacheService } from '../services/cache.service';
 
+
+// @AuthController: Handles user registration and JWT token generation for users
 export class AuthController {
   // User registration
   static async register(req: Request, res: Response): Promise<void> {

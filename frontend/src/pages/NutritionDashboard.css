@@ -1,0 +1,120 @@
+html, body{
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+.phone-sim{
+    width: calc(100vh * 0.563);
+    height: 100vh;
+    margin: 0 auto;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.title, .restaurants, .foods{
+    overflow: hidden;
+    padding: 0.5rem 1rem;
+}
+
+.title{
+    flex: 0 0 30%;
+    overflow: hidden;
+    padding: 0.5rem 1rem;
+    justify-content: center
+}
+
+.restaurants{
+    flex: 0 0 30%;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 1rem;
+    overflow: hidden;
+}
+
+.foods{
+    flex: 0 0 40%;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 1rem;
+    overflow: hidden;
+}
+
+.apptitle{
+    text-align: center;
+    font-size: clamp(1.8rem, 2.5vw, 2.8rem);
+    font-weight: bold;
+    margin: 0.5rem 0;
+}
+
+.goal-center{
+    text-align: center;
+    margin: 0.25rem 0;
+    font-size: 1.5rem;
+}
+
+select, button{
+    padding: 0.4rem;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+}
+
+.formula-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 0.75rem auto 0;
+    max-width: 90%;
+    flex-wrap: wrap;
+    text-align: center;
+}
+
+.formula-block{
+    flex: 1;
+    font-size: 0.75rem;
+}
+
+.divider{
+    width: 1px;
+    height: 40px;
+    background-color: #ccc;
+}
+
+.scroll-box{
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+
+.restaurant-card, .food-card{
+border-radius: 10px;
+padding: 1rem;
+color: white;
+}
+
+.darkblue{
+    background-color: #003366;
+}
+
+.blue{
+    background-color: #0055a5;
+}
+
+.lightblue{
+    background-color: #3399ff;
+}
+
+h3{
+    font-size: 1rem;
+    margin: 0.5rem 0 0.25rem;
+    font-weight: bold;
+}

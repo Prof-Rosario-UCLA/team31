@@ -113,6 +113,10 @@ color: white;
     background-color: #3399ff;
 }
 
+.gray{
+    background-color: grey;
+}
+
 h3{
     font-size: 1rem;
     margin: 0.5rem 0 0.25rem;

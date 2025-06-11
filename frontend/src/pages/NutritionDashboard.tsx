@@ -1,7 +1,66 @@
 import React from 'react';
 import './NutritionDashboard.css';
+import { diningHalls } from "../data/diningHalls";
+import { Location } from "../types/models";
 
 const NutritionDashboard: React.FC = () => {
+
+  const [wasm, setWasm] = React.useState<any>(null);
+  const [userLocation, setUserLocation] = React.useState<Location | null>(null);
+
+  React.useEffect(() => {
+    const loadWasm = async()=>{
+      const response = await fetch("/formulae.wasm");
+      const buffer = await response.arrayBuffer();
+      const {instance} = await WebAssembly.instantiate(buffer);
+      setWasm(instance.exports);
+    };
+  
+    loadWasm();
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        }
+      );
+    }
+
+
+  }, []);
+
+  const getDistanceAndCalories = (coords: Location): [string, string] => {
+    //if offline
+    if (!wasm || !userLocation) {
+      return ["Loading...", "Loading"];
+    }
+  
+    //use the wasm module
+    const distance = wasm.haversine(userLocation.lat, userLocation.lng, coords.lat, coords.lng);
+    const calories = wasm.caloriesBurned(distance);
+    return [`${distance.toFixed(2)} mi`, `${Math.round(calories)} calories burned`];
+  };
+
+  const colors = ["darkblue", "blue", "lightblue"];
+
+  const getCardColor = (index: number) => {
+    return index < 3 ? colors[index] : "gray";
+  };
+  
+  const getMedal = (index: number) => {
+    return index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : null;
+  };
+
+  const sortedHalls = [...diningHalls]
+  .map(h => ({...h, distance: (!wasm || !userLocation)
+      ? Infinity
+      : wasm.haversine(userLocation.lat, userLocation.lng, h.coords.lat, h.coords.lng)
+  }))
+  .sort((a, b) => b.distance - a.distance);
+
   return (
     <div className="phone-sim">
       <section className="title">
@@ -42,30 +101,19 @@ const NutritionDashboard: React.FC = () => {
       <section className="restaurants" role="region" aria-label="Recommended Restaurants for selected goal">
         <h3>Top Recommended Restaurants For: Cutting</h3>
         <div className="scroll-box">
-          <div className="restaurant-card darkblue">
-            <div>
-              <span aria-hidden="true">🥇</span> BPlate - XXX items - Avg P/C: 0.35
+          {sortedHalls.map((hall, idx) => {const [dist, cal] = getDistanceAndCalories(hall.coords);
+          
+          return (
+            <div className={`restaurant-card ${getCardColor(idx)}`} key={hall.id}>
+              <div>
+                {getMedal(idx) && <span aria-hidden="true">{getMedal(idx)}</span>} {hall.name} - XXX items - Avg P/C: {hall.avgPC.toFixed(2)}
+              </div>
+              <div>
+                {dist} ~ <em>{cal}</em>
+              </div>
             </div>
-            <div>
-              0.60 mi ~ <em>150 calories burned</em>
-            </div>
-          </div>
-          <div className="restaurant-card blue">
-            <div>
-              <span aria-hidden="true">🥈</span> De Neve - XXX items - Avg P/C: 0.30
-            </div>
-            <div>
-              0.50 mi ~ <em>130 calories burned</em>
-            </div>
-          </div>
-          <div className="restaurant-card lightblue">
-            <div>
-              <span aria-hidden="true">🥉</span> Rende West - XXX items - Avg P/C: 0.20
-            </div>
-            <div>
-              0.45 mi ~ <em>70 calories burned</em>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </section>
 

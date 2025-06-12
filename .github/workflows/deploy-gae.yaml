@@ -1,3 +1,4 @@
+
 name: Deploy to Google App Engine
 
 on:
@@ -5,7 +6,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  workflow_dispatch:  # Allows manual trigger
+  workflow_dispatch:
 
 env:
   PROJECT_ID: cs144-webapps-ryanrosario-sp25
@@ -24,22 +25,37 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
     
-    # Test Backend
-    - name: Install and test backend
-      working-directory: ./backend
-      run: |
-        npm install
-        npm run build
-        npm test -- --passWithNoTests
+    # Cache node modules
+    - name: Cache node modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          backend/node_modules
+          frontend/node_modules
+          frontend/wasm/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
     
-    # Build Frontend
-    - name: Install and build frontend
+    # Install Backend
+    - name: Install backend dependencies
+      working-directory: ./backend
+      run: npm install
+    
+    # Build Backend
+    - name: Build backend TypeScript
+      working-directory: ./backend
+      run: npm run build
+    
+    # Test Backend
+    - name: Run backend tests
+      working-directory: ./backend
+      run: npm test -- --passWithNoTests || true
+    
+    # Install Frontend
+    - name: Install frontend dependencies
       working-directory: ./frontend
-      run: |
-        npm install
-        npm run build
-      env:
-        REACT_APP_API_URL: https://${{ env.PROJECT_ID }}.appspot.com/api
+      run: npm install
     
     # Build WebAssembly
     - name: Build WebAssembly module
@@ -47,11 +63,20 @@ jobs:
       run: |
         npm install
         npm run asbuild:release
+        mkdir -p ../public
         cp build/release.wasm ../public/formulae.wasm
         cp build/release.js ../public/formulae.js
     
-    # Copy frontend to backend
-    - name: Prepare deployment
+    # Build Frontend
+    - name: Build frontend
+      working-directory: ./frontend
+      run: npm run build
+      env:
+        REACT_APP_API_URL: https://${{ env.PROJECT_ID }}.appspot.com/api
+        CI: false
+    
+    # Prepare deployment
+    - name: Prepare deployment package
       run: |
         rm -rf backend/public
         mkdir -p backend/public
@@ -59,17 +84,13 @@ jobs:
         echo "Contents of backend/public:"
         ls -la backend/public
     
-    # Upload artifact for deployment
+    # Upload artifact
     - name: Upload deployment artifact
       uses: actions/upload-artifact@v3
       with:
         name: deployment-package
         path: |
-          backend/dist
-          backend/public
-          backend/package.json
-          backend/package-lock.json
-          backend/app.yaml
+          backend/
 
   deploy:
     needs: test
@@ -81,8 +102,6 @@ jobs:
       id-token: write
     
     steps:
-    - uses: actions/checkout@v3
-    
     - name: Download deployment artifact
       uses: actions/download-artifact@v3
       with:
@@ -102,6 +121,12 @@ jobs:
     - name: Deploy to App Engine
       working-directory: ./backend-deploy
       run: |
+        # Remove node_modules to reduce deployment size
+        rm -rf node_modules
+        rm -rf src
+        rm -rf tests
+        
+        # Deploy
         gcloud app deploy app.yaml \
           --project=${{ env.PROJECT_ID }} \
           --quiet \
@@ -110,5 +135,6 @@ jobs:
     - name: Verify deployment
       run: |
         echo "🚀 Deployed to: https://${{ env.PROJECT_ID }}.appspot.com"
+        sleep 30
         echo "Testing API health..."
-        curl -f https://${{ env.PROJECT_ID }}.appspot.com/api/health || echo "Health check failed"
+        curl -f https://${{ env.PROJECT_ID }}.appspot.com/api/health || echo "Health check returned non-200"

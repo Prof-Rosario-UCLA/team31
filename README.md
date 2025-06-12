@@ -36,385 +36,131 @@
 
 ---
 
-## Project Overview
+Project Overview
+NutriBruin enhances the UCLA dining experience by providing personalized nutritional recommendations based on students' fitness goals. The system scrapes daily dining hall menus and provides API endpoints for diet-optimized restaurant and food recommendations.
+🎯 Current Status
 
-NutriBruin enhances the UCLA dining experience by providing personalized nutritional recommendations based on students' fitness goals. Our platform analyzes daily dining hall menus to recommend restaurants and foods optimized for cutting or bulking diets.
+✅ Backend API: Deployed on Google Cloud Run
+✅ Database: MongoDB Atlas configured and connected
+✅ Caching: Redis Cloud configured and connected
+✅ CI/CD: Automated deployment via Cloud Build
+🚧 Web Scraper: Basic implementation (full TypeScript version pending)
+🚧 Frontend: In development
+🚧 WebAssembly: Planned for performance optimization
 
-### 🎯 **Problem Statement**
-UCLA students currently have access to basic menu information but lack:
-- Quick identification of high-protein, low-calorie foods (cutting)
-- Easy discovery of calorie-dense options (bulking)
-- Restaurant recommendations based on diet goals
-- Distance and calorie burn calculations to dining locations
-
-### 🚀 **Solution**
-NutriBruin provides:
-- **Diet-Based Recommendations**: Personalized suggestions for cutting or bulking
-- **Smart Scoring Algorithm**: Ranks restaurants and foods by nutritional value
-- **Location Awareness**: Calculates walking distance and calories burned
-- **Daily Menu Scraping**: Automated collection of UCLA dining data
-- **Simple Interface**: Mobile-first design with no login required
-
-## 🛠 Technology Stack
-
-### **Frontend Architecture**
-```
-Simple HTML/CSS/JavaScript
-├── Responsive Design: Mobile-first (320px+)
-├── Cookie Management: Session persistence
-├── API Integration: Fetch with credentials
-└── No Framework Required: Vanilla JS
-```
-
-### **Backend Architecture**
-```
-Node.js 18+ + Express.js 4.18 + TypeScript
-├── Database: MongoDB 6.0+ with Mongoose ODM
-├── Caching: Redis 7.0+ (30-minute recommendations cache)
-├── Sessions: Cookie-based anonymous tracking
-├── Security: Helmet, CORS, Input Validation
-├── Web Scraping: Puppeteer for UCLA dining data
-├── Performance: WebAssembly (Extra Credit)
+🛠 Technology Stack
+Backend (Deployed)
+Node.js 18 + Express.js + TypeScript
+├── Database: MongoDB Atlas (Cloud)
+├── Caching: Redis Cloud
+├── Deployment: Google Cloud Run
+├── Container: Docker
+├── Web Scraping: Puppeteer (planned)
 └── Testing: Jest + Supertest
-```
-
-### **Infrastructure & Deployment**
-```
+Infrastructure
 Google Cloud Platform
-├── Compute: Google App Engine (automatic scaling)
-├── Database: MongoDB Atlas (cloud-managed)
-├── Caching: Redis Cloud (managed service)
-├── CI/CD: GitHub Actions (automated build, test, deploy)
-├── Monitoring: Google Cloud Operations Suite
-└── Security: HTTPS, CSP headers, secure cookie configuration
-```
+├── Compute: Cloud Run (auto-scaling, serverless)
+├── Build: Cloud Build (automated Docker builds)
+├── Secrets: Secret Manager (secure credential storage)
+├── Database: MongoDB Atlas (external)
+├── Cache: Redis Cloud (external)
+└── Monitoring: Cloud Logging
+📋 Project Requirements Status
+✅ Completed
 
-## 📋 Adhering to Final Project Specification
+ Database: MongoDB with Mongoose ODM
+ Caching Layer: Redis with TTL policies
+ HTTPS: Automatic via Cloud Run
+ API Design: RESTful endpoints
+ Cloud Deployment: Google Cloud Run (exceeds App Engine requirement)
+ CI/CD: Cloud Build automation
+ Security: Environment variables via Secret Manager
 
-### I. **Core Web Technologies**
-- [x] **Semantic HTML5**: `<header>`, `<nav>`, `<main>`, `<article>`, `<section>`, `<footer>`
-- [x] **HTML5 API**: Google Maps Geolocation API integration
-- [x] **Responsive Design**: Mobile-first design supporting 320px+ screens
-- [x] **Progressive Web App**: Service worker, offline functionality, installable
-- [x] **HTTPS**: All communications encrypted via App Engine SSL
-- [x] **Single Page Application**: Simple HTML/CSS/JS interface
+🚧 In Progress
 
-### II. **Authentication & Security**
-- [x] **Cookie Usage**: Session tracking without authentication required
-- [x] **Cookie Compliance**: GDPR-compliant cookie consent banner
-- [x] **Security Protection**: XSS, CSRF, SQL injection prevention
-- [x] **Content Security Policy**: Restrictive CSP headers
-- [x] **Input Validation**: Joi schema validation on all endpoints
+ Frontend: Simple HTML/CSS/JS interface
+ PWA Features: Service worker, offline functionality
+ WebAssembly: Nutrition calculations module
+ Full Scraper: Complete Puppeteer implementation
+ Authentication: Cookie-based sessions
 
-### III. **Database & Caching**
-- [x] **Database**: MongoDB with Mongoose ODM for schema validation
-- [x] **Caching Layer**: Redis with hierarchical TTL policies
-- [x] **Data Modeling**: Schemas for UserSessions, Restaurants, MenuItems
+🚀 Quick Start
+Access the Deployed API
+bash# Test health endpoint
+curl https://nutri-bruin-scraper-228340739101.us-central1.run.app/api/scraper/health
 
-### IV. **Advanced Features**
-- [x] **WebAssembly**: AssemblyScript module for nutrition calculations (Extra Credit)
-- [x] **API Integration**: Web scraping UCLA dining data
-- [x] **Frontend Framework**: Simple HTML/CSS/JS (no framework needed)
-- [x] **Accessibility**: ARIA attributes, keyboard navigation, screen reader support
+# Check stats
+curl https://nutri-bruin-scraper-228340739101.us-central1.run.app/api/scraper/stats
 
-### V. **Production Deployment**
-- [x] **Google App Engine**: Scalable, managed deployment platform
-- [x] **CI/CD Pipeline**: GitHub Actions for automated testing and deployment
-- [x] **Performance Optimization**: Code splitting, lazy loading, bundle analysis
-
----
-
-## 🏗 System Architecture
-
-### **High-Level Architecture Diagram**
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│  HTML/CSS/JS    │    │  Express API    │    │    MongoDB      │
-│  (Frontend)     │◄──►│   (Backend)     │◄──►│   (Database)    │
-│                 │    │                 │    │                 │
-│ • No Auth      │    │ • Controllers   │    │ • UserSessions  │
-│ • Cookies      │    │ • Middleware    │    │ • Restaurants   │
-│ • Simple UI    │    │ • Services      │    │ • MenuItems     │
-│                 │    │ • WebAssembly   │    │                 │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         │                       ▼                       │
-         │              ┌─────────────────┐              │
-         │              │     Redis       │              │
-         │              │   (Caching)     │              │
-         │              │                 │              │
-         │              │ • Recommendations│              │
-         │              │ • Menu Cache    │              │
-         │              │ • Sessions      │              │
-         │              └─────────────────┘              │
-         │                                                │
-         ▼                                                ▼
-┌─────────────────┐                              ┌─────────────────┐
-│ UCLA Dining     │                              │ Google Cloud    │
-│ Web Scraper     │                              │   Services      │
-│                 │                              │                 │
-│ • Puppeteer     │                              │ • App Engine    │
-│ • Daily Updates │                              │ • Cloud Build   │
-└─────────────────┘                              │ • Operations    │
-                                                  └─────────────────┘
-```
-
-### **Data Flow Architecture**
-1. **User Request**: Browser → Simple Frontend (no routing needed)
-2. **API Call**: Frontend → Express API (with session cookie)
-3. **Cache Check**: Express → Redis (check for cached recommendations)
-4. **Database Query**: Express → MongoDB (if cache miss)
-5. **Recommendation Calculation**: Express → Scoring Algorithm
-6. **WebAssembly**: Express → WASM module (nutrition calculations)
-7. **Response Path**: Database → Express → Frontend → User
-8. **Offline Support**: Service Worker intercepts requests → Cache API
-
-## 🚀 Quick Start Guide
-
-### **Prerequisites**
-- **Node.js 18+** ([Download](https://nodejs.org/))
-- **Git** ([Download](https://git-scm.com/))
-- **Google Cloud SDK** ([Install Guide](https://cloud.google.com/sdk/docs/install))
-- **MongoDB Atlas Account** ([Sign Up](https://www.mongodb.com/cloud/atlas))
-- **Redis Cloud Account** ([Sign Up](https://redis.com/try-free/))
-
-### **1. Clone Repository**
-```bash
+# Run scraper (POST)
+curl -X POST https://nutri-bruin-scraper-228340739101.us-central1.run.app/api/scraper/run \
+  -H "Content-Type: application/json" \
+  -d '{"restaurants": ["de-neve"], "dates": ["2025-06-11"]}'
+Local Development
+bash# Clone repository
 git clone https://github.com/your-username/team31.git
-cd team31
-```
+cd team31/backend
 
-### **2. Install Dependencies**
-```bash
-# Install backend dependencies
-cd backend && npm install
-```
+# Install dependencies
+npm install
 
-### **3. Environment Configuration**
-```bash
-# Backend environment setup
-cd backend
+# Set up environment variables
 cp .env.example .env
+# Edit .env with your MongoDB and Redis credentials
 
-# Edit .env with your configuration
-nano .env
-```
+# Run development server
+npm run dev
+🏗 Deployment Architecture
+GitHub Repository
+    │
+    └──> Cloud Build Trigger
+              │
+              └──> Docker Build
+                        │
+                        └──> Container Registry
+                                  │
+                                  └──> Cloud Run Service
+                                            │
+                                            ├──> MongoDB Atlas
+                                            └──> Redis Cloud
+📦 Current Implementation
+Minimal API Server
+The current deployment includes a minimal Express server with:
 
-**Required Environment Variables:**
-```env
-# Server Configuration
-NODE_ENV=development
-PORT=8080
+Health check endpoint for monitoring
+Stats endpoint showing configuration status
+Basic scraper run endpoint (returns mock response)
 
-# Database URLs (replace with your cloud instances)
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/nutri-bruin
-REDIS_URL=redis://username:password@host:port
+Next Steps
 
-# Security Configuration
-FRONTEND_URL=http://localhost:3000
-COOKIE_DOMAIN=localhost
-```
+Integrate full TypeScript codebase
+Implement Puppeteer scraping logic
+Add recommendation algorithms
+Deploy frontend interface
+Set up Cloud Scheduler for automated scraping
 
-### **4. Development Server**
-```bash
-# Start backend
-cd backend && npm run dev
-```
-
-**Access Points:**
-- 🌐 **Frontend**: http://localhost:3000
-- 🔧 **Backend API**: http://localhost:8080
-- 📊 **Health Check**: http://localhost:8080/api/health
-
-## 🏗 Development Setup
-
-#### i. **MongoDB Atlas Setup**
-```bash
-1. Create MongoDB Atlas cluster at https://cloud.mongodb.com
-2. Create database user with read/write permissions
-3. Whitelist your IP address (0.0.0.0/0 for development)
-4. Get connection string: mongodb+srv://username:password@cluster.mongodb.net
-5. Add to .env as MONGODB_URI with your database name appended
-```
-
-**Connection String Format:**
-```env
-MONGODB_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/nutri-bruin?retryWrites=true&w=majority
-```
-
-#### ii. **Redis Cloud Setup**
-
-1. Initialize Redis Cloud
-  - new account at https://redis.com/try-free/
-  - new database (30MB free tier)
-  - region: `us-central1` (matches Google Cloud)
-2. From dashboard, copy credentials:
-   - Host: redis-xxxxx.c1.us-central1-2.gce.redns.redis-cloud.com
-   - Port: 10871
-   - Username: default 
-   - Password: your-specific-password
-3. Environment Variables - update `.env`
-    ```bash
-    # Add to backend/.env
-    REDIS_HOST=redis-xxxxx.c1.us-central1-2.gce.redns.redis-cloud.com
-    REDIS_PORT=10871
-    REDIS_USERNAME=default
-    REDIS_PASSWORD=your-redis-password
-    ```
-
-#### iii. **Database Integration Testing**
-```bash
-# Run MongoDB integration tests
-npm run test:mongo
-# Run Redis integration tests
-npm run test:redis
-# Run all integration tests 
-npm test -- --testPathPattern=integration
-```
-
-## 🔧 Build & Deployment
-
-### **Google App Engine Deployment**
-
-#### **Initial Setup**
-```bash
-# Authenticate with Google Cloud
-gcloud auth login
-
-# Set project ID
-gcloud config set project your-gcp-project-id
-
-# Initialize App Engine
-gcloud app create --region=us-central1
-```
-
-#### **Deploy to Production**
-```bash
-# Build and deploy
-cd backend
-gcloud app deploy app.yaml --promote
-```
-
-### **CI/CD Pipeline**
-
-Our GitHub Actions workflow automatically:
-1. **Runs tests** on pull requests
-2. **Security scanning** with npm audit
-3. **Build verification** for backend
-4. **Automatic deployment** to staging on develop branch
-5. **Production deployment** on main branch merges
-
----
-
-# 🧠 Architecture Deep Dive
-
-## **Backend Architecture Decisions**
-
-#### **Express.js + TypeScript Architecture**
-```typescript
-// Controller → Service pattern (simplified)
-export class RecommendationController {
-  async getRecommendations(req: Request, res: Response) {
-    const { goal, lat, lng } = req.body;
-    const recommendations = await RecommendationService.calculate(goal, { lat, lng });
-    res.json(recommendations);
-  }
-}
-```
-
-#### **Database Design**
-
-**MongoDB Choice Justification:**
-```javascript
-// Flexible schema for session tracking
-const userSessionSchema = {
-  sessionId: String,
-  dietChoice: 'cutting' | 'bulking',
-  savedRecommendations: Object,
-  lastVisit: Date
-};
-```
-
-#### **Caching Strategy: Redis Implementation**
-```typescript
-// Simple caching with TTL
-const CacheKeys = {
-  recommendations: (sessionId: string, goal: string) => `rec:${sessionId}:${goal}`,
-  menu: (restaurantId: string, date: string) => `menu:${restaurantId}:${date}`,
-  todaysMenu: () => `menu:today:${new Date().toISOString().split('T')[0]}`
-};
-
-const CacheTTL = {
-  recommendations: 1800, // 30 minutes
-  menu: 3600,           // 1 hour
-  userSession: 2592000  // 30 days
-};
-```
-
-## **Scoring Algorithm Implementation**
-
-```typescript
-// Cutting: High protein/calorie ratio prioritized
-if (goal === 'cutting') {
-  score = avgProteinCalorieRatio * 0.4 + 
-          (qualityItemCount / totalItems) * 0.3 + 
-          (caloriesBurned / 100) * 0.3;
-}
-
-// Bulking: Calorie density prioritized  
-else {
-  score = (avgCaloriesPerOz / 100) * 0.5 + 
-          avgProteinCalorieRatio * 0.3 + 
-          (itemCount / 50) * 0.2;
-}
-```
-
----
-
-## 🧪 Testing Strategy
-
-### **Backend Testing**
-```bash
-# Unit and integration tests
-cd backend
+🧪 Testing
+bash# Run all tests
 npm test
 
-# API endpoint testing
+# Integration tests
+npm run test:mongo
+npm run test:redis
+
+# API tests
 npm run test:api
+📈 Monitoring
 
-# Database integration tests
-npm run test:db
-```
+Logs: Cloud Console Logs
+Metrics: Cloud Run Metrics
+Traces: Cloud Trace
 
----
+🔒 Security
 
-## 📈 Performance Metrics
-
-### **Target Metrics**
-- **Response Time**: <200ms for recommendations
-- **Cache Hit Rate**: >80%
-- **Scraping Time**: <5 minutes for all restaurants
-- **Uptime**: 99.9%
-
----
-
-## 🚀 Roadmap & Future Enhancements
-
-### **Phase 1: MVP (Current)**
-- [x] Session-based recommendation system
-- [x] Restaurant and menu data models
-- [x] Scoring algorithm implementation
-- [ ] Web scraper for UCLA dining data
-- [ ] Simple frontend interface
-- [ ] PWA service worker
-
-### **Phase 2: Enhanced Features**
-- [ ] WebAssembly nutrition calculations (Extra Credit)
-- [ ] Enhanced offline functionality
-- [ ] Performance optimizations
-
----
-
+Secrets Management: All credentials stored in Google Secret Manager
+HTTPS: Automatic TLS via Cloud Run
+Access Control: IAM policies for service accounts
+Input Validation: Joi schema validation (pending full implementation)
 ## 🤝 Contributing
 
 ### **Development Workflow**

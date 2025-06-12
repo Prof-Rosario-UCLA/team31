@@ -1,4 +1,3 @@
-
 name: Deploy to Google App Engine
 
 on:
@@ -18,16 +17,16 @@ jobs:
     name: Test and Build
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ env.NODE_VERSION }}
     
     # Cache node modules
     - name: Cache node modules
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           backend/node_modules
@@ -84,13 +83,12 @@ jobs:
         echo "Contents of backend/public:"
         ls -la backend/public
     
-    # Upload artifact
+    # Upload artifact - UPDATED TO V4
     - name: Upload deployment artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: deployment-package
-        path: |
-          backend/
+        path: backend/
 
   deploy:
     needs: test
@@ -102,26 +100,29 @@ jobs:
       id-token: write
     
     steps:
+    # UPDATED TO V4
+    - uses: actions/checkout@v4
+    
     - name: Download deployment artifact
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: deployment-package
         path: backend-deploy
     
     - name: Authenticate to Google Cloud
-      uses: google-github-actions/auth@v1
+      uses: google-github-actions/auth@v2
       with:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
     
     - name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v1
+      uses: google-github-actions/setup-gcloud@v2
       with:
         project_id: ${{ env.PROJECT_ID }}
     
     - name: Deploy to App Engine
       working-directory: ./backend-deploy
       run: |
-        # Remove node_modules to reduce deployment size
+        # Remove unnecessary files to reduce deployment size
         rm -rf node_modules
         rm -rf src
         rm -rf tests

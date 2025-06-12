@@ -10,7 +10,8 @@ export type Food = {
     name: string;
     calories: number;
     protein: number;
-    servingSize: string;
+    servingSize: number; //ensure conversion to grams not oz
+    diningHall: string;
 };
   
 //Dining Halls will have a numeric id, named string, coordinates, avgPC stored, and a list of all their foods

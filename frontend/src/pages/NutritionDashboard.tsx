@@ -55,12 +55,50 @@ const NutritionDashboard: React.FC = () => {
     return index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : null;
   };
 
+  /// OLD SORT JUST FOR PLACEHOLDER REAL SORTER BELOW ///
   const sortedHalls = [...diningHalls]
   .map(h => ({...h, distance: (!wasm || !userLocation)
-      ? Infinity
-      : wasm.haversine(userLocation.lat, userLocation.lng, h.coords.lat, h.coords.lng)
+      ? Infinity : wasm.haversine(userLocation.lat, userLocation.lng, h.coords.lat, h.coords.lng)
   }))
   .sort((a, b) => b.distance - a.distance);
+
+  /// REAL SORTER WITH ACTUAL LOGIC FOR ALL 3 CRITERIA ///
+  const sortHalls = () => {
+    return [...diningHalls].sort((a, b) => {
+      ///CUTTING LOGIC
+      if (goal === "cutting") {
+        //sort by numer of high P/C foods
+        const countHighPC = (hall: typeof a) =>
+          hall.allFoods.filter(f => f.protein / f.calories >= 1).length;
+  
+        return countHighPC(b) - countHighPC(a);
+      }
+  
+      //BULKING LOGIC
+      if (goal === "bulking") {
+        //sort by food with the highest calories per gram
+        const maxCalsPerGram = (hall: typeof a) =>
+          hall.allFoods.reduce(
+            (max, f) => Math.max(max, f.calories / f.servingSize || 1),
+            0
+          );
+        return maxCalsPerGram(b) - maxCalsPerGram(a);
+      }
+  
+      //VOLUME LOGIC
+      if (goal === "volume") {
+        //sort by the halls by the food that has the smallest ratio of calories / gram
+        const minCals = (hall: typeof a) =>
+          hall.allFoods.reduce((min, f) => Math.min(min, f.calories / f.servingSize), Infinity);
+  
+        return minCals(a) - minCals(b);
+      }
+  
+      return 0;
+    });
+  };
+
+
 
   return (
     <div className="phone-sim">

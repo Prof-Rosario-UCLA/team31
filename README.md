@@ -18,50 +18,64 @@
 
 ---
 
+# NutriBruin — UCLA dining nutrition companion
+
+*\~ CS144 Web Applications Final Project • Spring 2025 ~*
+
+[![](https://github.com/your-username/team31/workflows/CI%20Pipeline/badge.svg)](https://github.com/your-username/team31/actions)
+[![Deployment Status](https://img.shields.io/badge/deployment-Google%20App%20Engine-blue)](https://team31-cs144.appspot.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.1.6-blue)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green)](https://nodejs.org/)
+
+## Team Members
+
+| Name | Email | Role | Responsibilities |
+|------|-------|------|------------------|
+| **Ryan Phua** | rphua@g.ucla.edu | Backend Lead | Backend Architecture, WebAssembly, Cloud Infrastructure, Database Design |
+| **Andre Mai** | andre.d.mai@gmail.com | Frontend Lead | Frontend Architecture, UI/UX Design, Security Implementation |
+
+---
+
 ## Project Overview
 
-NutriBruin enhances the UCLA dining experience by providing comprehensive nutritional insights beyond basic menu data. Our platform bridges the gap between UCLA's existing dining information and students' need for detailed nutritional analysis, personalized recommendations, and location-aware dining assistance.
+NutriBruin enhances the UCLA dining experience by providing personalized nutritional recommendations based on students' fitness goals. Our platform analyzes daily dining hall menus to recommend restaurants and foods optimized for cutting or bulking diets.
 
 ### 🎯 **Problem Statement**
 UCLA students currently have access to basic menu information but lack:
-- Detailed nutritional analysis and insights
-- Personalized meal recommendations based on dietary goals
-- AI-powered nutritional guidance
-- Location-aware dining hall discovery
-- Offline access to dining information
+- Quick identification of high-protein, low-calorie foods (cutting)
+- Easy discovery of calorie-dense options (bulking)
+- Restaurant recommendations based on diet goals
+- Distance and calorie burn calculations to dining locations
 
 ### 🚀 **Solution**
-NutriBruin enhances UCLA dining through:
-- **Real-time Menu Integration**: Live menu data with expanded nutritional information
-- **AI-Powered Recommendations**: Personalized meal suggestions using OpenAI integration
-- **Geolocation Services**: Find nearby dining halls with walking directions
-- **Progressive Web App**: Offline functionality with service worker caching
-- **Accessibility First**: WCAG 2.1 AA compliant design with semantic HTML5
+NutriBruin provides:
+- **Diet-Based Recommendations**: Personalized suggestions for cutting or bulking
+- **Smart Scoring Algorithm**: Ranks restaurants and foods by nutritional value
+- **Location Awareness**: Calculates walking distance and calories burned
+- **Daily Menu Scraping**: Automated collection of UCLA dining data
+- **Simple Interface**: Mobile-first design with no login required
 
 ## 🛠 Technology Stack
 
 ### **Frontend Architecture**
 ```
-React 18.2 + TypeScript 5.1.6
-├── State Management: Zustand (lightweight, type-safe)
-├── Styling: Tailwind CSS 3.3 (utility-first, responsive)
-├── Routing: React Router v6 (SPA navigation)
-├── HTTP Client: Axios (with interceptors for auth)
-├── Maps: Google Maps JavaScript API
-├── PWA: Workbox (service worker, offline caching)
-└── Build Tool: Create React App (webpack, babel)
+Simple HTML/CSS/JavaScript
+├── Responsive Design: Mobile-first (320px+)
+├── Cookie Management: Session persistence
+├── API Integration: Fetch with credentials
+└── No Framework Required: Vanilla JS
 ```
 
 ### **Backend Architecture**
 ```
 Node.js 18+ + Express.js 4.18 + TypeScript
 ├── Database: MongoDB 6.0+ with Mongoose ODM
-├── Caching: Redis 7.0+ (hierarchical TTL strategies)
-├── Authentication: JWT with HttpOnly cookies
-├── Security: Helmet, CORS, Rate Limiting, Input Validation
-├── AI Integration: OpenAI GPT-3.5-turbo API
-├── Performance: WebAssembly (AssemblyScript) for nutrition calculations
-└── Testing: Jest + Supertest (unit, integration, e2e)
+├── Caching: Redis 7.0+ (30-minute recommendations cache)
+├── Sessions: Cookie-based anonymous tracking
+├── Security: Helmet, CORS, Input Validation
+├── Web Scraping: Puppeteer for UCLA dining data
+├── Performance: WebAssembly (Extra Credit)
+└── Testing: Jest + Supertest
 ```
 
 ### **Infrastructure & Deployment**
@@ -69,7 +83,7 @@ Node.js 18+ + Express.js 4.18 + TypeScript
 Google Cloud Platform
 ├── Compute: Google App Engine (automatic scaling)
 ├── Database: MongoDB Atlas (cloud-managed)
-├── Caching: Redis Cloud (managed Redis service)
+├── Caching: Redis Cloud (managed service)
 ├── CI/CD: GitHub Actions (automated build, test, deploy)
 ├── Monitoring: Google Cloud Operations Suite
 └── Security: HTTPS, CSP headers, secure cookie configuration
@@ -83,31 +97,29 @@ Google Cloud Platform
 - [x] **Responsive Design**: Mobile-first design supporting 320px+ screens
 - [x] **Progressive Web App**: Service worker, offline functionality, installable
 - [x] **HTTPS**: All communications encrypted via App Engine SSL
-- [x] **Single Page Application**: React Router for client-side navigation
+- [x] **Single Page Application**: Simple HTML/CSS/JS interface
 
 ### II. **Authentication & Security**
-- [x] **JWT Authentication**: Cookie-based with secure HttpOnly configuration
+- [x] **Cookie Usage**: Session tracking without authentication required
 - [x] **Cookie Compliance**: GDPR-compliant cookie consent banner
 - [x] **Security Protection**: XSS, CSRF, SQL injection prevention
 - [x] **Content Security Policy**: Restrictive CSP headers
-- [x] **Input Validation**: Joi/Zod schema validation on all endpoints
+- [x] **Input Validation**: Joi schema validation on all endpoints
 
 ### III. **Database & Caching**
 - [x] **Database**: MongoDB with Mongoose ODM for schema validation
 - [x] **Caching Layer**: Redis with hierarchical TTL policies
-- [x] **Data Modeling**: Normalized schemas for Users, Restaurants, Menus, Nutrition
+- [x] **Data Modeling**: Schemas for UserSessions, Restaurants, MenuItems
 
 ### IV. **Advanced Features**
-- [x] **WebAssembly**: AssemblyScript module for nutrition calculations
-- [x] **API Integration**: OpenAI GPT-3.5-turbo for personalized recommendations
-- [x] **Real-time Communication**: WebSocket support for live menu updates
-- [x] **Frontend Framework**: React with TypeScript for type safety
+- [x] **WebAssembly**: AssemblyScript module for nutrition calculations (Extra Credit)
+- [x] **API Integration**: Web scraping UCLA dining data
+- [x] **Frontend Framework**: Simple HTML/CSS/JS (no framework needed)
 - [x] **Accessibility**: ARIA attributes, keyboard navigation, screen reader support
 
 ### V. **Production Deployment**
 - [x] **Google App Engine**: Scalable, managed deployment platform
 - [x] **CI/CD Pipeline**: GitHub Actions for automated testing and deployment
-- [x] **Production CSS**: Tailwind CSS with PostCSS optimization
 - [x] **Performance Optimization**: Code splitting, lazy loading, bundle analysis
 
 ---
@@ -117,13 +129,13 @@ Google Cloud Platform
 ### **High-Level Architecture Diagram**
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   React SPA     │    │  Express API    │    │    MongoDB      │
+│  HTML/CSS/JS    │    │  Express API    │    │    MongoDB      │
 │  (Frontend)     │◄──►│   (Backend)     │◄──►│   (Database)    │
 │                 │    │                 │    │                 │
-│ • Components    │    │ • Controllers   │    │ • Users         │
-│ • State Mgmt    │    │ • Middleware    │    │ • Restaurants   │
-│ • PWA Cache     │    │ • Services      │    │ • Menus         │
-│ • Service Worker│    │ • WebAssembly   │    │ • Nutrition     │
+│ • No Auth      │    │ • Controllers   │    │ • UserSessions  │
+│ • Cookies      │    │ • Middleware    │    │ • Restaurants   │
+│ • Simple UI    │    │ • Services      │    │ • MenuItems     │
+│                 │    │ • WebAssembly   │    │                 │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
          │                       │                       │
          │                       ▼                       │
@@ -131,33 +143,31 @@ Google Cloud Platform
          │              │     Redis       │              │
          │              │   (Caching)     │              │
          │              │                 │              │
+         │              │ • Recommendations│              │
          │              │ • Menu Cache    │              │
-         │              │ • User Sessions │              │
-         │              │ • AI Responses  │              │
+         │              │ • Sessions      │              │
          │              └─────────────────┘              │
          │                                                │
          ▼                                                ▼
 ┌─────────────────┐                              ┌─────────────────┐
-│ External APIs   │                              │ Google Cloud    │
-│                 │                              │   Services      │
-│ • OpenAI GPT    │                              │                 │
-│ • Google Maps   │                              │ • App Engine    │
-│ • Places API    │                              │ • Cloud Build   │
+│ UCLA Dining     │                              │ Google Cloud    │
+│ Web Scraper     │                              │   Services      │
+│                 │                              │                 │
+│ • Puppeteer     │                              │ • App Engine    │
+│ • Daily Updates │                              │ • Cloud Build   │
 └─────────────────┘                              │ • Operations    │
                                                   └─────────────────┘
 ```
 
 ### **Data Flow Architecture**
-1. **User Request**: Browser → React SPA (client-side routing)
-2. **API Call**: React → Express API (authenticated requests)
-3. **Cache Check**: Express → Redis (check for cached data)
+1. **User Request**: Browser → Simple Frontend (no routing needed)
+2. **API Call**: Frontend → Express API (with session cookie)
+3. **Cache Check**: Express → Redis (check for cached recommendations)
 4. **Database Query**: Express → MongoDB (if cache miss)
-5. **AI Processing**: Express → OpenAI API (for recommendations)
+5. **Recommendation Calculation**: Express → Scoring Algorithm
 6. **WebAssembly**: Express → WASM module (nutrition calculations)
-7. **Response Path**: Database/AI → Express → React → User
-8. **Offline Support**: Service Worker intercepts requests → IndexedDB/Cache API
-
-
+7. **Response Path**: Database → Express → Frontend → User
+8. **Offline Support**: Service Worker intercepts requests → Cache API
 
 ## 🚀 Quick Start Guide
 
@@ -176,14 +186,8 @@ cd team31
 
 ### **2. Install Dependencies**
 ```bash
-# Install root dependencies
-npm install
-
-# Install frontend dependencies
-cd frontend && npm install && cd ..
-
 # Install backend dependencies
-cd backend && npm install && cd ..
+cd backend && npm install
 ```
 
 ### **3. Environment Configuration**
@@ -206,13 +210,6 @@ PORT=8080
 MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/nutri-bruin
 REDIS_URL=redis://username:password@host:port
 
-# Authentication Secret (generate secure random string)
-JWT_SECRET=your-256-bit-secret-key-here
-
-# External API Keys
-OPENAI_API_KEY=sk-your-openai-api-key
-GOOGLE_MAPS_API_KEY=your-google-maps-api-key
-
 # Security Configuration
 FRONTEND_URL=http://localhost:3000
 COOKIE_DOMAIN=localhost
@@ -220,21 +217,14 @@ COOKIE_DOMAIN=localhost
 
 ### **4. Development Server**
 ```bash
-# Start both frontend and backend (from project root)
-npm run dev
-
-# Or start individually:
-# Frontend: cd frontend && npm start
-# Backend: cd backend && npm run dev
+# Start backend
+cd backend && npm run dev
 ```
 
 **Access Points:**
 - 🌐 **Frontend**: http://localhost:3000
 - 🔧 **Backend API**: http://localhost:8080
 - 📊 **Health Check**: http://localhost:8080/api/health
-
-
-
 
 ## 🏗 Development Setup
 
@@ -252,24 +242,17 @@ npm run dev
 MONGODB_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/nutri-bruin?retryWrites=true&w=majority
 ```
 
-**Quick Connection Test:** (see `backend/stc/tests/integration/mongodb.test.ts` for full jest implementation)
-```bash
-# Test MongoDB connection
-cd backend
-node -e "require('mongoose').connect(process.env.MONGODB_URI).then(() => console.log('✅ Connected!')).catch(e => console.error('❌ Failed:', e.message))"
-```
-
 #### ii. **Redis Cloud Setup**
 
 1. Initialize Redis Cloud
   - new account at https://redis.com/try-free/
   - new database (30MB free tier)
-  - regiuon: `us-central1` (matches Google Cloud)
+  - region: `us-central1` (matches Google Cloud)
 2. From dashboard, copy credentials:
    - Host: redis-xxxxx.c1.us-central1-2.gce.redns.redis-cloud.com
    - Port: 10871
    - Username: default 
-   - Password: your-specific-password (My Databases > Database Configuration > Security > Default user password)
+   - Password: your-specific-password
 3. Environment Variables - update `.env`
     ```bash
     # Add to backend/.env
@@ -289,41 +272,7 @@ npm run test:redis
 npm test -- --testPathPattern=integration
 ```
 
-**Common MongoDB Issues:**
-- **Connection timeout**: Check IP whitelist in Atlas (use 0.0.0.0/0 for dev)
-- **Authentication failed**: Verify username/password in connection string
-- **Cloud Shell**: IPs may change; use "Allow from Anywhere" option
-
----
-#TODO: 1
-#### iv. ** API Keys Setup**
-
-- **OpenAI API Key**
-    ```bash
-    1. Create account at https://openai.com
-    2. Generate API key in dashboard
-    3. Add to .env as OPENAI_API_KEY
-    ```
-
-- **Google Maps API Key**
-    ```bash
-    1. Create project in Google Cloud Console
-    2. Enable Maps JavaScript API and Places API
-    3. Create credentials (API key)
-    4. Restrict key to your domain
-    5. Add to .env as GOOGLE_MAPS_API_KEY
-    ```
-
 ## 🔧 Build & Deployment
-
-### **Local Production Build**
-```bash
-# Build entire application
-npm run build
-
-# Test production build locally
-cd frontend && npm install -g serve && serve -s build
-```
 
 ### **Google App Engine Deployment**
 
@@ -342,17 +291,8 @@ gcloud app create --region=us-central1
 #### **Deploy to Production**
 ```bash
 # Build and deploy
-./scripts/deploy/deploy.sh
-
-# Or manual deployment
 cd backend
 gcloud app deploy app.yaml --promote
-```
-
-#### **Deploy to Staging**
-```bash
-# Deploy without promoting to production
-./scripts/deploy/deploy-staging.sh
 ```
 
 ### **CI/CD Pipeline**
@@ -360,376 +300,78 @@ gcloud app deploy app.yaml --promote
 Our GitHub Actions workflow automatically:
 1. **Runs tests** on pull requests
 2. **Security scanning** with npm audit
-3. **Build verification** for both frontend and backend
+3. **Build verification** for backend
 4. **Automatic deployment** to staging on develop branch
 5. **Production deployment** on main branch merges
 
-**Workflow Configuration:** `.github/workflows/`
-- `ci.yml`: Continuous integration testing
-- `deploy-staging.yml`: Staging environment deployment
-- `deploy-production.yml`: Production deployment
-
 ---
-
 
 # 🧠 Architecture Deep Dive
 
-## **I) Frontend Architecture Decisions**
+## **Backend Architecture Decisions**
 
-#### i) **React + TypeScript Choice**
-- **Type Safety**: Compile-time error detection, better IDE support
-- **Component Reusability**: Modular design with props interfaces
-- **Performance**: Virtual DOM optimization, concurrent features
-- **Ecosystem**: Rich library ecosystem, extensive community support
-
-#### ii) **State Management: Zustand vs Redux**
+#### **Express.js + TypeScript Architecture**
 ```typescript
-// Why Zustand over Redux
-interface AuthStore {
-  user: User | null;
-  login: (credentials: LoginData) => Promise<void>;
-  logout: () => void;
-}
-
-// Simple, boilerplate-free store definition
-const useAuthStore = create<AuthStore>((set) => ({
-  user: null,
-  login: async (credentials) => {
-    const user = await authService.login(credentials);
-    set({ user });
-  },
-  logout: () => set({ user: null })
-}));
-```
-
-**Justification:**
-- **Minimal Boilerplate**: 50% less code than Redux
-- **TypeScript Integration**: Native TypeScript support
-- **Bundle Size**: 2.5KB vs Redux's 6KB+ ecosystem
-- **Learning Curve**: Simpler for 2-person team
-- **Performance**: No unnecessary re-renders
-
-#### iii) **Styling: Tailwind CSS Strategy**
-```css
-/* Utility-first approach with component classes */
-@layer components {
-  .btn-primary {
-    @apply bg-ucla-blue text-white px-6 py-3 rounded-lg 
-           hover:bg-blue-700 transition-colors font-medium;
-  }
-  
-  .card {
-    @apply bg-white rounded-lg shadow-lg p-6 border border-gray-200;
+// Controller → Service pattern (simplified)
+export class RecommendationController {
+  async getRecommendations(req: Request, res: Response) {
+    const { goal, lat, lng } = req.body;
+    const recommendations = await RecommendationService.calculate(goal, { lat, lng });
+    res.json(recommendations);
   }
 }
 ```
 
-**Benefits:**
-- **Rapid Development**: No context switching between CSS files
-- **Consistency**: Design system enforced through utilities
-- **Bundle Size**: PurgeCSS removes unused styles
-- **Responsive Design**: Mobile-first breakpoint system
-- **UCLA Branding**: Custom color palette integration
-
-## II) **Backend Architecture Decisions**
-
-#### i) **Express.js + TypeScript Architecture**
-```typescript
-// Controller → Service → Repository pattern
-export class RestaurantController {
-  async getRestaurants(req: Request, res: Response) {
-    try {
-      const restaurants = await this.restaurantService.findAll();
-      res.json({ data: restaurants });
-    } catch (error) {
-      next(error); // Handled by error middleware
-    }
-  }
-}
-```
-
-**Design Patterns:**
-- **Dependency Injection**: Services injected into controllers
-- **Repository Pattern**: Data access abstraction
-- **Middleware Pipeline**: Security, validation, error handling
-- **Error Handling**: Centralized error middleware
-
-#### ii) **Database Design**
+#### **Database Design**
 
 **MongoDB Choice Justification:**
 ```javascript
-// Flexible schema for varied nutrition data
-const nutritionSchema = {
-  itemName: String,
-  baseNutrition: {
-    calories: Number,
-    macros: { protein: Number, carbs: Number, fat: Number },
-    micros: { vitamins: Map, minerals: Map }
-  },
-  aiInsights: {
-    recommendations: [String],
-    dietaryFlags: [String],
-    lastAnalyzed: Date
-  }
+// Flexible schema for session tracking
+const userSessionSchema = {
+  sessionId: String,
+  dietChoice: 'cutting' | 'bulking',
+  savedRecommendations: Object,
+  lastVisit: Date
 };
 ```
 
-**Benefits:**
-- **Schema Flexibility**: Nutrition data varies significantly
-- **JSON Native**: Direct mapping to API responses
-- **Geospatial Queries**: Restaurant location searches
-- **Aggregation Pipeline**: Complex nutrition analysis
-- **Horizontal Scaling**: Future growth capabilities
-
-#### iii) **Caching Strategy: Redis Implementation**
+#### **Caching Strategy: Redis Implementation**
 ```typescript
-// Hierarchical caching with TTL
+// Simple caching with TTL
 const CacheKeys = {
-  MENU: (restaurantId: string, date: string) => `menu:${restaurantId}:${date}`,
-  NUTRITION: (itemId: string) => `nutrition:${itemId}`,
-  AI_INSIGHTS: (nutritionId: string) => `ai:${nutritionId}`,
-  USER_SESSION: (userId: string) => `session:${userId}`
+  recommendations: (sessionId: string, goal: string) => `rec:${sessionId}:${goal}`,
+  menu: (restaurantId: string, date: string) => `menu:${restaurantId}:${date}`,
+  todaysMenu: () => `menu:today:${new Date().toISOString().split('T')[0]}`
 };
 
 const CacheTTL = {
-  MENU: 3600,        // 1 hour (frequent updates)
-  NUTRITION: 86400,   // 24 hours (stable data)
-  AI_INSIGHTS: 604800, // 7 days (expensive to generate)
-  USER_SESSION: 604800 // 7 days (security balance)
+  recommendations: 1800, // 30 minutes
+  menu: 3600,           // 1 hour
+  userSession: 2592000  // 30 days
 };
 ```
 
-## III) **Authentication Flow Diagram**
+## **Scoring Algorithm Implementation**
 
-**Overview**: NutriBruin uses JWT tokens stored in HTTP-only cookies for stateless, secure authentication.
-
-![alt text](./backend/static/images/auth_flow_diagram.png)
-
-
-## i) **User Registration/Login Flow**
-
-```
-User                    Server                   Database
- |                        |                         |
- |--POST /auth/login----->|                         |
- |  {email, password}     |                         |
- |                        |----Check password------>|
- |                        |<----User data-----------|
- |                        |                         |
- |                    Generate JWT                  |
- |                    userId: "abc123"              |
- |                    expires: 7 days               |
- |                        |                         |
- |<---HTTP-Only Cookie----|                         |
- |   auth_token=JWT       |                         |
-```
-
-**Flow Explanation**:
-
-1. **Login Request**: User submits email/password to `/api/auth/login`
-
-2. **Validation**: Server queries MongoDB and verifies password using bcrypt
-
-3. **JWT Creation**: On success, generates token containing:
-   - `userId`: User's MongoDB ObjectId
-   - `exp`: 7-day expiration timestamp
-   - Signed with `JWT_SECRET` to prevent tampering
-
-4. **Cookie Storage**: Token set as HTTP-only cookie with:
-   - `httpOnly`: true (no JavaScript access)
-   - `secure`: true (HTTPS in production)
-   - `sameSite`: 'strict' (CSRF protection)
-
-5. User session cached in Redis for fast lookups
-
-## ii) **Authenticated Request Flow**
-
-```
-User                    Server                   Database
- |                        |                         |
- |--GET /api/profile----->|                         |
- |  Cookie: auth_token    |                         |
- |                        |                         |
- |                   Verify JWT                     |
- |                   Extract userId                 |
- |                        |                         |
- |                        |----Get user data------->|
- |                        |<----User profile--------|
- |<----User profile-------|                         |
-```
-
-**Flow Explanation**:
-
-1. **Request**: Browser automatically sends `auth_token` cookie with protected route requests
-
-2. **Middleware Verification**: 
-   ```javascript
-   const token = req.cookies?.auth_token;
-   const decoded = jwt.verify(token, JWT_SECRET);
-   ```
-
-3. **Validation Checks**:
-   - Signature verification (token integrity)
-   - Expiration check (within 7 days)
-   - Extract userId from payload
-
-4. **User Context**: Middleware attaches user to request:
-   ```javascript
-   req.user = { userId: decoded.userId };
-   ```
-
-5. **Data Retrieval**: 
-   - Check Redis cache first
-   - Fall back to MongoDB if needed
-   - Return profile (excluding password)
-
-**Security Benefits**:
-- **XSS Protection**: HTTP-only cookies prevent JavaScript token access
-- **CSRF Protection**: SameSite attribute blocks cross-origin requests
-- **Limited Exposure**: 7-day expiration reduces compromise window
-- **Stateless**: Each request independently verified
-
-
-
-## IV) **Auth Middleware \& Controllers**
-
-```bash
-# Overall, the sequence diagram below shows how a client request is handled by our implementation
-Browser → Middleware → Controller → Database → Controller → Browser
-
-# Request flows through middleware indicated by []
-Request → [Cookie Parser:(read cookies)] → [Authentication: (is logged in?)] → [Validation: (are data in/outputs valid?)] → Controller → Response:Client
-        
-# Example workflow in our app
-# When user tries to view their profile:
-# Step 1. Cookie Parser Middleware runs first
-app.use(cookieParser());  
-
-# Step 2. Authentication Middleware runs second
-app.get('/api/profile', authenticate, ProfileController.getProfile);
-          
-
-# Step 3: When inside authenticate middleware:
-function authenticate(req, res, next) {
-    # 3.1 Check if user has valid ticket (JWT token)
-    if (!req.cookies.auth_token) {
-        return res.status(401).json({ error: "No ticket!" });
-    }
-    
-    # 3.2 Verify user login information
-    const userId = verifyToken(req.cookies.auth_token);
-    
-    # 3.3 Attach user info to request
-    req.user = { userId };
-    
-    # 3.4 next() passes control to the next middleware function, aka. controller
-    next();  // 
+```typescript
+// Cutting: High protein/calorie ratio prioritized
+if (goal === 'cutting') {
+  score = avgProteinCalorieRatio * 0.4 + 
+          (qualityItemCount / totalItems) * 0.3 + 
+          (caloriesBurned / 100) * 0.3;
 }
-```
 
-```typescript
-// Security middleware pipeline
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "fonts.googleapis.com"],
-      scriptSrc: ["'self'", "maps.googleapis.com"],
-      connectSrc: ["'self'", "api.openai.com"]
-    }
-  }
-}));
-
-app.use(cors({
-  origin: process.env.FRONTEND_URL,
-  credentials: true, // Allow cookies
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
-app.use(rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
-  message: 'Too many requests, please try again later'
-}));
-```
-
-### **Performance Optimizations**
-
-#### **WebAssembly Integration**
-```typescript
-// Nutrition calculation optimization
-// AssemblyScript module for complex nutrition math
-export function calculateNutritionalScore(
-  nutrition: NutritionData,
-  userGoals: UserGoals,
-  restrictions: string[]
-): f64 {
-  // Complex scoring algorithm in WebAssembly
-  // 40%+ performance improvement over JavaScript
-  let score = 0.0;
-  
-  // Macro balance scoring
-  const proteinScore = calculateProteinScore(nutrition.protein, userGoals.protein);
-  const carbScore = calculateCarbScore(nutrition.carbs, userGoals.carbs);
-  
-  return score;
+// Bulking: Calorie density prioritized  
+else {
+  score = (avgCaloriesPerOz / 100) * 0.5 + 
+          avgProteinCalorieRatio * 0.3 + 
+          (itemCount / 50) * 0.2;
 }
-```
-
-#### **Progressive Web App Strategy**
-```typescript
-// Service worker caching strategy
-const CACHE_STRATEGY = {
-  'app-shell': 'CacheFirst',     // HTML, CSS, JS
-  'api-data': 'NetworkFirst',    // API responses
-  'images': 'StaleWhileRevalidate', // Restaurant images
-  'ai-insights': 'CacheFirst'    // Expensive AI responses
-};
-
-// Offline fallback for essential functionality
-self.addEventListener('fetch', (event) => {
-  if (event.request.url.includes('/api/restaurants')) {
-    event.respondWith(
-      caches.match(event.request)
-        .then(response => response || showOfflinePage())
-    );
-  }
-});
 ```
 
 ---
 
 ## 🧪 Testing Strategy
-
-### **Testing Pyramid**
-```
-                    ▲
-                   /|\
-                  / | \
-                 /  |  \
-                /   |   \
-               /    |    \
-              /     |     \
-             /  E2E Tests  \    ← 10% (Critical user flows)
-            /_______________\
-           /                 \
-          /  Integration      \   ← 20% (API endpoints, DB)
-         /     Tests          \
-        /_____________________ \
-       /                       \
-      /      Unit Tests         \  ← 70% (Components, services)
-     /_________________________\
-```
-
-### **Frontend Testing**
-```bash
-# Component testing with React Testing Library
-npm test -- --coverage
-
-# E2E testing with Cypress (planned)
-npm run test:e2e
-```
 
 ### **Backend Testing**
 ```bash
@@ -748,40 +390,28 @@ npm run test:db
 
 ## 📈 Performance Metrics
 
-### **Lighthouse Targets**
-- **Performance**: >90
-- **Accessibility**: >95
-- **Best Practices**: >90
-- **SEO**: >90
-- **PWA**: >90
-
-### **Bundle Size Targets**
-- **Initial Bundle**: <250KB gzipped
-- **Route Chunks**: <100KB each
-- **Time to Interactive**: <3 seconds
-- **First Contentful Paint**: <1.5 seconds
+### **Target Metrics**
+- **Response Time**: <200ms for recommendations
+- **Cache Hit Rate**: >80%
+- **Scraping Time**: <5 minutes for all restaurants
+- **Uptime**: 99.9%
 
 ---
 
 ## 🚀 Roadmap & Future Enhancements
 
 ### **Phase 1: MVP (Current)**
-- [x] Basic authentication and user management
-- [x] Restaurant and menu data display
-- [x] Responsive design and PWA foundation
-- [x] Basic AI integration for recommendations
+- [x] Session-based recommendation system
+- [x] Restaurant and menu data models
+- [x] Scoring algorithm implementation
+- [ ] Web scraper for UCLA dining data
+- [ ] Simple frontend interface
+- [ ] PWA service worker
 
 ### **Phase 2: Enhanced Features**
-- [ ] Real-time menu updates via WebSocket
-- [ ] Advanced WebAssembly nutrition calculations
-- [ ] Comprehensive offline functionality
-- [ ] Enhanced accessibility features
-
-### **Phase 3: Advanced AI**
-- [ ] Machine learning meal recommendations
-- [ ] Nutritional goal tracking and analytics
-- [ ] Social features and meal sharing
-- [ ] Integration with fitness tracking apps
+- [ ] WebAssembly nutrition calculations (Extra Credit)
+- [ ] Enhanced offline functionality
+- [ ] Performance optimizations
 
 ---
 
@@ -795,36 +425,17 @@ npm run test:db
 5. **Open** a Pull Request
 
 ### **Code Style Guidelines**
-- **TypeScript**: Strict mode enabled, prefer interfaces over types
-- **React**: Functional components with hooks, no class components
-- **CSS**: Tailwind utilities, component classes for reusable patterns
-- **Backend**: Controller → Service → Repository pattern
+- **TypeScript**: Strict mode enabled
+- **Backend**: Controller → Service pattern
 - **Testing**: Minimum 80% coverage for new features
-
-### **Commit Convention**
-```
-feat: add user authentication system
-fix: resolve mobile navigation bug
-docs: update API documentation
-style: format code with prettier
-refactor: optimize database queries
-test: add integration tests for auth
-```
 
 ## 📞 Developer Support
 
 For questions, issues, or contributions:
 - **Technical Issues**: Open an issue on GitHub
 - **Team Contact**: 
-  - Ryan Phua: rphua@g.ucla.edu | `github@ryean0`
-  - Andre Mai: andre.d.mai@gmail.com | `github@andredmai`
-
-### 📊 Project Statistics
-
-![GitHub repo size](https://img.shields.io/github/repo-size/your-username/team31)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/your-username/team31)
-![GitHub top language](https://img.shields.io/github/languages/top/your-username/team31)
-![GitHub last commit](https://img.shields.io/github/last-commit/your-username/team31)
+  - Ryan Phua: rphua@g.ucla.edu
+  - Andre Mai: andre.d.mai@gmail.com
 
 ## 📄 LICENSE (MIT)
 

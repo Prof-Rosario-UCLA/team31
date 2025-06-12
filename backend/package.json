@@ -13,7 +13,13 @@
         "test:mongo": "jest src/tests/integration/mongodb.test.ts --runInBand",
         "test:redis": "jest src/tests/integration/redis.test.ts --runInBand",
         "lint": "eslint src --ext .ts",
-        "format": "prettier --write \"src/**/*.ts\""
+        "format": "prettier --write \"src/**/*.ts\"",
+        "scrape": "ts-node src/utils/scrape-menu.ts",
+        "test:scraper": "ts-node src/tests/unit/scraper.test.ts",
+        "scrape:today": "ts-node src/utils/scrape-menu.ts",
+        "scrape:tomorrow": "ts-node src/utils/scrape-menu.ts --tomorrow",
+        "scrape:week": "ts-node src/utils/scrape-menu.ts --week",
+        "scrape:all": "ts-node src/utils/scrape-menu.ts --all --force"
     },
     "keywords": [
         "ucla",
@@ -24,6 +30,7 @@
     "license": "MIT",
     "dependencies": {
         "bcryptjs": "^2.4.3",
+        "cheerio": "^1.0.0-rc.12",
         "compression": "^1.7.4",
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.5",
@@ -35,6 +42,12 @@
         "jsonwebtoken": "^9.0.2",
         "mongoose": "^7.4.0",
         "morgan": "^1.10.0",
+        "node-cron": "^3.0.3",
+        "p-queue": "^7.4.1",
+        "puppeteer": "^24.10.0",
+        "puppeteer-core": "^24.10.0",
+        "puppeteer-extra": "^3.3.6",
+        "puppeteer-extra-plugin-stealth": "^2.11.2",
         "redis": "^4.6.7"
     },
     "devDependencies": {

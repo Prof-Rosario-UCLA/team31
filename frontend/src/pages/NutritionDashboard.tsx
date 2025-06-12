@@ -7,6 +7,7 @@ const NutritionDashboard: React.FC = () => {
 
   const [wasm, setWasm] = React.useState<any>(null);
   const [userLocation, setUserLocation] = React.useState<Location | null>(null);
+  const [goal, setGoal] = React.useState("cutting");
 
   React.useEffect(() => {
     const loadWasm = async()=>{
@@ -67,7 +68,7 @@ const NutritionDashboard: React.FC = () => {
         <h1 className="apptitle">NutriBruin</h1>
         <h2 className="goal-center">Goal:</h2>
         <form action="#" method="GET" className="goal-center">
-          <select id="goal" name="goal">
+          <select id="goal" name="goal" value={goal} onChange={(e) => setGoal(e.target.value)}>
             <option value="cutting">Cutting</option>
             <option value="bulking">Bulking</option>
             <option value="volume">Volume</option>
@@ -138,6 +139,35 @@ const NutritionDashboard: React.FC = () => {
             </div>
             <div>P/C: 0.6 - 91 Calories, 6g Protein</div>
           </div>
+
+          <div className="food-card gray">
+            <div>
+              <b>Cheerios</b> - <em>De Neve</em>
+            </div>
+            <div>P/C: 0.3 - 100 Calories, 3g Protein</div>
+          </div>
+
+          <div className="food-card gray">
+            <div>
+              <b>Tart Frozen Yogurt</b> - <em>BPlate</em>
+            </div>
+            <div>P/C: 0.16 - 120 Calories, 2g Protein</div>
+          </div>
+
+          <div className="food-card gray">
+            <div>
+              <b>XXX</b> - <em>BPlate</em>
+            </div>
+            <div>P/C: 0.00 - 0.00 Calories, 0.00g Protein</div>
+          </div>
+
+          <div className="food-card gray">
+            <div>
+              <b>XXX</b> - <em>BPlate</em>
+            </div>
+            <div>P/C: 0.00 - 0.00 Calories, 0.00g Protein</div>
+          </div>
+
         </div>
       </section>
     </div>

@@ -2,6 +2,9 @@ import React from 'react';
 import './NutritionDashboard.css';
 import { diningHalls } from "../data/diningHalls";
 import { Location } from "../types/models";
+import { Food } from "../types/models";
+
+const MAX_FOOD_DISPLAY = 50;
 
 const NutritionDashboard: React.FC = () => {
 
@@ -98,7 +101,31 @@ const NutritionDashboard: React.FC = () => {
     });
   };
 
+  //BEST FOODS SORTING LOGIC
+  const sortFoods = () => {
+    const allFoods: Food[] = [];
 
+    for (let i = 0; i < diningHalls.length; i++) {
+      const hall = diningHalls[i];
+      for (let j = 0; j < hall.allFoods.length; j++) {
+        allFoods.push(hall.allFoods[j]);
+      }
+    }
+    
+    //goal logic
+    if (goal === "cutting") {
+      //sort by highest ratio of protein/calories
+      allFoods.sort((a, b) => (b.protein / b.calories) - (a.protein / a.calories));
+    } else if (goal === "bulking") {
+      //sort by highest reatio of calories / serving
+      allFoods.sort((a, b) => (b.calories / b.servingSize) - (a.calories / a.servingSize));
+    } else if (goal === "volume") {
+      //sort by lowest ratio of calories / serving
+      allFoods.sort((a, b) => (a.calories / a.servingSize) - (b.calories / b.servingSize));
+    }
+  
+    return allFoods;
+  };
 
   return (
     <div className="phone-sim">
@@ -138,7 +165,12 @@ const NutritionDashboard: React.FC = () => {
       <br />
 
       <section className="restaurants" role="region" aria-label="Recommended Restaurants for selected goal">
-        <h3>Top Recommended Restaurants For: Cutting</h3>
+        <h3>
+          Top Recommended Restaurants For:{" "}
+          {goal === "cutting" && "Cutting"}
+          {goal === "bulking" && "Bulking"}
+          {goal === "volume" && "Volume"}
+        </h3>
         <div className="scroll-box">
           {sortedHalls.map((hall, idx) => {const [dist, cal] = getDistanceAndCalories(hall.coords);
           
@@ -157,7 +189,11 @@ const NutritionDashboard: React.FC = () => {
       </section>
 
       <section className="foods" role="region" aria-label="Top Foods for selected goal">
-        <h3>Today's Top Protein Foods</h3>
+        <h3>
+          {goal === "cutting" && "Today's Top Protein Foods"}
+          {goal === "bulking" && "Today's Top Caloric Foods"}
+          {goal === "volume" && "Today's Top Volume Foods"}
+        </h3>
         <div className="top-foods-list scroll-box">
           <div className="food-card darkblue">
             <div>
@@ -207,6 +243,19 @@ const NutritionDashboard: React.FC = () => {
           </div>
 
         </div>
+        {/* <div className="top-foods-list scroll-box">
+          {sortFoods().slice(0, MAX_FOOD_DISPLAY).map((food, idx) => (
+            <div className={`food-card ${getCardColor(idx)}`} key={`${food.name}-${idx}`}>
+              <div>
+                {getMedal(idx) && <span aria-hidden="true">{getMedal(idx)}</span>}{" "}
+                <b>{food.name}</b> - <em>{food.diningHall}</em>
+              </div>
+              <div>
+                P/C: {(food.protein / food.calories).toFixed(2)} - {food.calories} Calories, {food.protein}g Protein
+              </div>
+            </div>
+          ))}
+        </div> */}
       </section>
     </div>
   );

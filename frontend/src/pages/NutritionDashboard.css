@@ -122,3 +122,25 @@ h3{
     margin: 0.5rem 0 0.25rem;
     font-weight: bold;
 }
+
+@media (prefers-color-scheme: dark) {
+    html, body {
+      background-color: #121212;
+      color: #f0f0f0;
+    }
+  
+    .divider {
+      background-color: #444;
+    }
+  
+    .restaurant-card.gray,
+    .food-card.gray {
+      background-color: #555;
+    }
+  
+    select, button {
+      background-color: #1e1e1e;
+      color: #f0f0f0;
+      border: 1px solid #555;
+    }
+  }

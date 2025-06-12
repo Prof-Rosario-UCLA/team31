@@ -2,11 +2,23 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package.json ./
-COPY server.js ./
+# Copy package files
+COPY package*.json ./
+RUN npm ci --only=production
 
-RUN npm install
+# Copy TypeScript files and config
+COPY . .
+
+# Install dev dependencies for building
+RUN npm install --only=development
+
+# Build TypeScript
+RUN npm run build
+
+# Remove dev dependencies
+RUN npm prune --production
 
 EXPOSE 8080
 
-CMD ["node", "server.js"]
+# Start the compiled JavaScript
+CMD ["node", "dist/index.js"]

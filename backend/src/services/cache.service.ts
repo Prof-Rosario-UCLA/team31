@@ -4,17 +4,23 @@ export class CacheService {
   // Cache keys with consistent naming
   static keys = {
     menu: (restaurantId: string, date: string) => `menu:${restaurantId}:${date}`,
+    recommendations: (sessionId: string, goal: string) => `rec:${sessionId}:${goal}`,
+    todaysMenu: () => `menu:today:${new Date().toISOString().split('T')[0]}`,
+    userSession: (sessionId: string) => `session:${sessionId}`,
     nutrition: (itemId: string) => `nutrition:${itemId}`,
-    aiInsight: (query: string) => `ai:${Buffer.from(query).toString('base64')}`,
-    userSession: (userId: string) => `session:${userId}`
+    recipe: (recipeId: string) => `recipe:${recipeId}`,
+    weeklyTemplate: (restaurant: string, day: number) => `template:${restaurant}:${day}`
   };
 
   // TTL in seconds
   static ttl = {
-    menu: 3600,        // 1 hour
-    nutrition: 86400,  // 24 hours
-    aiInsight: 604800, // 7 days
-    userSession: 604800 // 7 days
+    menu: 3600,          // 1 hour
+    recommendations: 1800, // 30 minutes
+    todaysMenu: 3600,    // 1 hour
+    userSession: 2592000, // 30 days
+    nutrition: 86400,     // 24 hours
+    recipe: 86400,        // 24 hours  
+    weeklyTemplate: 604800 // 7 days
   };
 
   static async get(key: string): Promise<any> {

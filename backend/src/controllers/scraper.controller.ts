@@ -168,8 +168,8 @@ export class ScraperController {
         return;
       }
       
-      // Generate dates for next 7 days
-      const dates = [];
+      // ########## FIXED: Explicitly type the dates array ################
+      const dates: string[] = [];
       for (let i = 0; i < 7; i++) {
         const date = new Date();
         date.setDate(date.getDate() + i);

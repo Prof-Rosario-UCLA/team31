@@ -15,7 +15,8 @@ export class BrowserManager {
     console.log('🚀 Initializing Puppeteer browser...');
     
     this.browser = await puppeteer.launch({
-      headless: 'new',
+      // ########## FIXED: Use boolean instead of 'new' ################
+      headless: true,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',

@@ -9,9 +9,9 @@ export class RecommendController {
     try {
       const { goal, lat, lng } = req.body;
       
-      // Validate goal
-      if (!goal || !['cutting', 'bulking'].includes(goal)) {
-        res.status(400).json({ error: 'Goal must be either "cutting" or "bulking"' });
+      // Validate goal - ########## UPDATED FOR FRONTEND COMPATIBILITY ################
+      if (!goal || !['cutting', 'bulking', 'volume'].includes(goal)) {
+        res.status(400).json({ error: 'Goal must be either "cutting", "bulking", or "volume"' });
         return;
       }
       
@@ -34,11 +34,29 @@ export class RecommendController {
         return;
       }
 
+      // ########## HANDLE VOLUME GOAL (map to cutting for now) ################
+      const mappedGoal = goal === 'volume' ? 'cutting' : goal;
+
       // Get recommendations
       const recommendations = await RecommendService.getRecommendations(
-        goal as 'cutting' | 'bulking',
+        mappedGoal as 'cutting' | 'bulking',
         { lat, lng }
       );
+
+      // ########## FORMAT RESPONSE FOR FRONTEND COMPATIBILITY ################
+      const formattedResponse = {
+        goal,
+        restaurants: recommendations.restaurants.map((restaurant, index) => ({
+          ...restaurant,
+          medal: index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : null
+        })),
+        topFoods: recommendations.topFoods.map((food, index) => ({
+          ...food,
+          medal: index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : null
+        })),
+        timestamp: recommendations.timestamp,
+        userLocation: lat && lng ? { lat, lng } : null
+      };
 
       // Save session
       await UserSession.findOneAndUpdate(
@@ -48,15 +66,15 @@ export class RecommendController {
           dietChoice: goal,
           lastVisit: new Date(),
           savedRecommendations: recommendations,
-          userLocation: lat && lng ? { lat, lng } : undefined
+          userLocation: lat && lng ? { lat, lng, timestamp: new Date() } : undefined
         },
         { upsert: true, new: true }
       );
 
       // Cache results
-      await CacheService.set(cacheKey, recommendations, 3600); // 1 hour
+      await CacheService.set(cacheKey, formattedResponse, 3600); // 1 hour
 
-      res.json(recommendations);
+      res.json(formattedResponse);
     } catch (error) {
       console.error('Get recommendations error:', error);
       res.status(500).json({ error: 'Failed to get recommendations' });
@@ -65,9 +83,37 @@ export class RecommendController {
 
   static async getTodaysMenuData(req: Request, res: Response): Promise<void> {
     try {
-      // Simple endpoint to get all today's menu data
-      const menuData = await RecommendService.getAllTodaysMenuItems();
-      res.json(menuData);
+      // ########## ENHANCED WITH RESTAURANT FILTER ################
+      const { restaurant } = req.query;
+      
+      // Check cache first
+      const cacheKey = `todays-menu:${restaurant || 'all'}`;
+      const cached = await CacheService.get(cacheKey);
+      if (cached) {
+        res.json(cached);
+        return;
+      }
+
+      let menuData;
+      if (restaurant) {
+        menuData = await RecommendService.getAllTodaysMenuItems();
+        // Filter by restaurant if specified
+        menuData = menuData.filter(item => item.restaurant === restaurant);
+      } else {
+        menuData = await RecommendService.getAllTodaysMenuItems();
+      }
+
+      const response = {
+        date: new Date().toISOString().split('T')[0],
+        restaurant: restaurant || 'all',
+        items: menuData,
+        count: menuData.length
+      };
+
+      // Cache for 1 hour
+      await CacheService.set(cacheKey, response, 3600);
+
+      res.json(response);
     } catch (error) {
       console.error('Get menu data error:', error);
       res.status(500).json({ error: 'Failed to get menu data' });

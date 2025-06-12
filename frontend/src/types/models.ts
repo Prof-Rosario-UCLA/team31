@@ -22,3 +22,27 @@ export type DiningHall = {
     avgPC: number;
     allFoods: Food[];
 };
+
+
+// frontend/src/types/models.ts - ADD:
+export interface BackendRecommendation {
+    goal: 'cutting' | 'bulking';
+    restaurants: Array<{
+      name: string;
+      displayName: string;
+      avgProteinCalorieRatio: number;
+      itemCount: number;
+      qualityItemCount: number;
+      distance: number;
+      caloriesBurned: number;
+    }>;
+    topFoods: Array<{
+      name: string;
+      restaurant: string;
+      restaurantDisplayName: string;
+      proteinCalorieRatio: number;
+      calories: number;
+      protein: number;
+      servingSize: string;
+    }>;
+  }

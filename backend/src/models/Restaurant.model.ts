@@ -21,18 +21,16 @@ export interface IRestaurant extends Document {
     address: string;
     coordinates: [number, number];
   };
-  hours: {
-    [day: string]: {
-      breakfast?: { start: string; end: string };
-      lunch?: { start: string; end: string };
-      dinner?: { start: string; end: string };
-      allDay?: { start: string; end: string };
-    };
-  };
+  hours: Map<string, any>;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+
+  /** Custom methods injected via schema.methods */
+  isCurrentlyOpen(currentTime?: Date): boolean;
+  getCurrentMealPeriod(currentTime?: Date): string | null;
 }
+
 
 /**
  * @var Schema Mongoose schema for restaurant locations
@@ -143,7 +141,8 @@ RestaurantSchema.index({
  */
 RestaurantSchema.methods.isCurrentlyOpen = function(currentTime?: Date): boolean {
   const now = currentTime || new Date();
-  const dayName = now.toLocaleDateString('en-US', { weekday: 'lowercase' });
+  // ########## FIXED TYPESCRIPT ERROR ################
+  const dayName = now.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
   const currentHours = this.hours.get(dayName);
   
   if (!currentHours || !this.isActive) return false;
@@ -168,7 +167,8 @@ RestaurantSchema.methods.isCurrentlyOpen = function(currentTime?: Date): boolean
  */
 RestaurantSchema.methods.getCurrentMealPeriod = function(currentTime?: Date): string | null {
   const now = currentTime || new Date();
-  const dayName = now.toLocaleDateString('en-US', { weekday: 'lowercase' });
+  // ########## FIXED TYPESCRIPT ERROR ################
+  const dayName = now.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
   const currentHours = this.hours.get(dayName);
   
   if (!currentHours || !this.isActive) return null;
@@ -226,4 +226,5 @@ RestaurantSchema.statics.findNearby = function(
   });
 };
 
-export default mongoose.model<IRestaurant>('Restaurant', RestaurantSchema);
+const RestaurantModel = mongoose.model<IRestaurant>('Restaurant', RestaurantSchema);
+export default RestaurantModel;

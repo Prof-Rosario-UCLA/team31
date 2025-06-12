@@ -44,6 +44,7 @@ export class DataTransformer {
       dietaryTags: nutrition.dietaryTags as DietaryTag[], // ########## EXPLICIT CAST ################
       nutrition: {
         calories: nutrition.calories,
+        protein: nutrition.protein,
         totalFat: nutrition.totalFat,
         saturatedFat: nutrition.saturatedFat,
         cholesterol: nutrition.cholesterol,
@@ -51,10 +52,9 @@ export class DataTransformer {
         totalCarbs: nutrition.totalCarbs,
         dietaryFiber: nutrition.dietaryFiber,
         sugars: nutrition.sugars,
-        protein: nutrition.protein,
-        calcium: nutrition.calcium,
-        iron: nutrition.iron,
-        potassium: nutrition.potassium
+        calcium: nutrition.calcium ?? 0,
+        iron: nutrition.iron ?? 0,
+        potassium: nutrition.potassium ?? 0
       },
       date,
       mealPeriod: parsedItem.mealPeriod

@@ -4,6 +4,8 @@ import { ScraperController } from '../controllers/scraper.controller';
 
 const router = Router();
 
+router.get('/mock', ScraperController.runMockScraper); 
+
 // ########## ADD HEALTH CHECK ROUTE ################
 router.get('/health', ScraperController.healthCheck);
 

@@ -9,17 +9,14 @@ export interface IRecipeMaster extends Document {
   servingSizeOz: number;
   nutrition: {
     calories: number;
+    protein: number;
     totalFat: number;
     saturatedFat: number;
-    transFat: number;
     cholesterol: number;
     sodium: number;
     totalCarbs: number;
     dietaryFiber: number;
     sugars: number;
-    addedSugars: number;
-    protein: number;
-    vitaminD?: number;
     calcium?: number;
     iron?: number;
     potassium?: number;
@@ -27,6 +24,7 @@ export interface IRecipeMaster extends Document {
   dietaryTags: DietaryTag[];
   lastUpdated: Date;
 }
+
 
 const RecipeMasterSchema = new Schema<IRecipeMaster>({
   recipeId: { 

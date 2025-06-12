@@ -2,11 +2,23 @@
 import { Request, Response } from 'express';
 import { ScraperService } from '../services/scraper/scraper.service';
 import { ScraperScheduler } from '../services/scraper/scheduler';
+import { simulateScraper } from '../services/scraper/fake-scraper';
+
 
 export class ScraperController {
   private static scraperService = new ScraperService();
   private static scraperScheduler = new ScraperScheduler();
   private static activeJobs = new Map<string, any>();
+
+  static async runMockScraper(req: Request, res: Response): Promise<void> {
+    try {
+      await simulateScraper();
+      res.json({ success: true, message: 'Mock scraper run complete' });
+    } catch (err) {
+      console.error('Mock scraper error:', err);
+      res.status(500).json({ error: 'Mock scraper failed' });
+    }
+  }
   
   // ########## HEALTH CHECK FOR CLOUD RUN ################
   static async healthCheck(req: Request, res: Response): Promise<void> {

@@ -21,20 +21,20 @@ export type DietaryTag =
  * @interface NutritionData nutrition info data structure
  * @description Essential nutrition data based on ucla-dining online menut
  */
-export interface NutritionData {
-  calories: number;
-  totalFat: number;
-  saturatedFat: number;
-  cholesterol: number;
-  sodium: number;
-  totalCarbs: number;
-  dietaryFiber: number;
-  sugars: number;
-  protein: number;
-  calcium?: number;
-  iron?: number;
-  potassium?: number;
-}
+  export interface NutritionData {
+    calories: number;
+    protein: number;
+    totalFat: number;
+    saturatedFat: number;
+    cholesterol: number;
+    sodium: number;
+    totalCarbs: number;
+    dietaryFiber: number;
+    sugars: number;
+    calcium?: number;
+    iron?: number;
+    potassium?: number;
+  }
 /**
  * @interface Menu item document interface
  * @description Complete menu item with nutrition, dietary info, and metadata for all items

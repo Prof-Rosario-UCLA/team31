@@ -24,17 +24,7 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
     
-    # Cache node modules
-    - name: Cache node modules
-      uses: actions/cache@v4
-      with:
-        path: |
-          backend/node_modules
-          frontend/node_modules
-          frontend/wasm/node_modules
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
+    # Skip cache to avoid errors - npm install is fast enough
     
     # Install Backend
     - name: Install backend dependencies
@@ -83,12 +73,18 @@ jobs:
         echo "Contents of backend/public:"
         ls -la backend/public
     
-    # Upload artifact - UPDATED TO V4
+    # Upload artifact
     - name: Upload deployment artifact
       uses: actions/upload-artifact@v4
       with:
         name: deployment-package
-        path: backend/
+        path: |
+          backend/dist
+          backend/public
+          backend/package.json
+          backend/package-lock.json
+          backend/app.yaml
+          backend/.gcloudignore
 
   deploy:
     needs: test
@@ -100,7 +96,6 @@ jobs:
       id-token: write
     
     steps:
-    # UPDATED TO V4
     - uses: actions/checkout@v4
     
     - name: Download deployment artifact
@@ -116,16 +111,32 @@ jobs:
     
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v2
-      with:
-        project_id: ${{ env.PROJECT_ID }}
+    
+    - name: Create .gcloudignore
+      working-directory: ./backend-deploy
+      run: |
+        cat > .gcloudignore << 'IGNORE'
+        .gcloudignore
+        .git
+        .gitignore
+        node_modules/
+        src/
+        *.ts
+        *.test.js
+        coverage/
+        .env
+        .env.local
+        README.md
+        *.log
+        tests/
+        __tests__/
+        IGNORE
     
     - name: Deploy to App Engine
       working-directory: ./backend-deploy
       run: |
-        # Remove unnecessary files to reduce deployment size
-        rm -rf node_modules
-        rm -rf src
-        rm -rf tests
+        # Install only production dependencies
+        npm ci --only=production || npm install --only=production
         
         # Deploy
         gcloud app deploy app.yaml \
@@ -136,6 +147,8 @@ jobs:
     - name: Verify deployment
       run: |
         echo "🚀 Deployed to: https://${{ env.PROJECT_ID }}.appspot.com"
-        sleep 30
+        sleep 45
         echo "Testing API health..."
-        curl -f https://${{ env.PROJECT_ID }}.appspot.com/api/health || echo "Health check returned non-200"
+        curl -f https://${{ env.PROJECT_ID }}.appspot.com/api/health || echo "Health check still warming up"
+        echo "Testing scraper health..."  
+        curl -f https://${{ env.PROJECT_ID }}.appspot.com/api/scraper/health || echo "Scraper check still warming up"

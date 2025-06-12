@@ -1,0 +1,57 @@
+name: Manual Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Build Backend
+      working-directory: ./backend
+      run: |
+        npm install
+        npm run build
+    
+    - name: Build Frontend
+      working-directory: ./frontend
+      run: |
+        npm install
+        npm run build
+      env:
+        REACT_APP_API_URL: https://cs144-webapps-ryanrosario-sp25.appspot.com/api
+    
+    - name: Prepare deployment
+      run: |
+        rm -rf backend/public
+        cp -r frontend/build backend/public
+    
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+    
+    - name: Deploy to App Engine
+      working-directory: ./backend
+      run: |
+        gcloud app deploy app.yaml \
+          --project=cs144-webapps-ryanrosario-sp25 \
+          --quiet \
+          --version=${{ github.event.inputs.environment }}-${{ github.sha }}

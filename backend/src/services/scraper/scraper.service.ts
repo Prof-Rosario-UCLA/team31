@@ -186,7 +186,20 @@ export class ScraperService {
               category: stationName,
               station: stationName,
               dietaryTags: recipe.dietaryTags,
-              nutrition: recipe.nutrition,
+              nutrition: {
+                calories: recipe.nutrition.calories,
+                protein: recipe.nutrition.protein,
+                totalFat: recipe.nutrition.totalFat,
+                saturatedFat: recipe.nutrition.saturatedFat,
+                cholesterol: recipe.nutrition.cholesterol,
+                sodium: recipe.nutrition.sodium,
+                totalCarbs: recipe.nutrition.totalCarbs,
+                dietaryFiber: recipe.nutrition.dietaryFiber,
+                sugars: recipe.nutrition.sugars,
+                calcium: recipe.nutrition.calcium || 0,  // ########## PROVIDE DEFAULT ################
+                iron: recipe.nutrition.iron || 0,        // ########## PROVIDE DEFAULT ################
+                potassium: recipe.nutrition.potassium || 0  // ########## PROVIDE DEFAULT ################
+              },
               date: new Date(dateStr),
               mealPeriod
             });
@@ -281,20 +294,17 @@ export class ScraperService {
               servingSize: recipe.servingSize,
               servingSizeOz: recipe.servingSizeOz,
               calories: recipe.nutrition.calories,
+              protein: recipe.nutrition.protein,
               totalFat: recipe.nutrition.totalFat,
               saturatedFat: recipe.nutrition.saturatedFat,
-              transFat: recipe.nutrition.transFat,
               cholesterol: recipe.nutrition.cholesterol,
               sodium: recipe.nutrition.sodium,
               totalCarbs: recipe.nutrition.totalCarbs,
               dietaryFiber: recipe.nutrition.dietaryFiber,
               sugars: recipe.nutrition.sugars,
-              addedSugars: recipe.nutrition.addedSugars,
-              protein: recipe.nutrition.protein,
-              vitaminD: recipe.nutrition.vitaminD,
-              calcium: recipe.nutrition.calcium,
-              iron: recipe.nutrition.iron,
-              potassium: recipe.nutrition.potassium,
+              calcium: recipe.nutrition.calcium || 0,     // ########## PROVIDE DEFAULT ################
+              iron: recipe.nutrition.iron || 0,           // ########## PROVIDE DEFAULT ################
+              potassium: recipe.nutrition.potassium || 0, // ########## PROVIDE DEFAULT ################
               dietaryTags: recipe.dietaryTags
             },
             restaurantId,

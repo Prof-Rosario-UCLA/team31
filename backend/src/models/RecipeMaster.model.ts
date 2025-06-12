@@ -49,17 +49,14 @@ const RecipeMasterSchema = new Schema<IRecipeMaster>({
   },
   nutrition: {
     calories: { type: Number, required: true, min: 0 },
+    protein: { type: Number, required: true, min: 0 },
     totalFat: { type: Number, required: true, min: 0 },
     saturatedFat: { type: Number, required: true, min: 0 },
-    transFat: { type: Number, default: 0, min: 0 },
     cholesterol: { type: Number, required: true, min: 0 },
     sodium: { type: Number, required: true, min: 0 },
     totalCarbs: { type: Number, required: true, min: 0 },
     dietaryFiber: { type: Number, required: true, min: 0 },
     sugars: { type: Number, required: true, min: 0 },
-    addedSugars: { type: Number, default: 0, min: 0 },
-    protein: { type: Number, required: true, min: 0 },
-    vitaminD: { type: Number, min: 0 },
     calcium: { type: Number, min: 0 },
     iron: { type: Number, min: 0 },
     potassium: { type: Number, min: 0 }

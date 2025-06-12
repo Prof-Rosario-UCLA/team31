@@ -10,18 +10,15 @@ export interface NutritionInfo {
   calories: number;
   totalFat: number;
   saturatedFat: number;
-  transFat: number;
   cholesterol: number;
   sodium: number;
   totalCarbs: number;
   dietaryFiber: number;
   sugars: number;
-  addedSugars: number;
   protein: number;
-  vitaminD?: number;
-  calcium?: number;
-  iron?: number;
-  potassium?: number;
+  calcium: number;
+  iron: number;
+  potassium: number;
   dietaryTags: DietaryTag[];
 }
 
@@ -126,15 +123,12 @@ export class NutritionParser {
         calories: this.parseNutrientValue($, ['calories', 'Calories']),
         totalFat: this.parseNutrientValue($, ['total-fat', 'totalFat', 'Total Fat', 'Fat']),
         saturatedFat: this.parseNutrientValue($, ['saturated-fat', 'saturatedFat', 'Saturated Fat']),
-        transFat: this.parseNutrientValue($, ['trans-fat', 'transFat', 'Trans Fat']),
         cholesterol: this.parseNutrientValue($, ['cholesterol', 'Cholesterol']),
         sodium: this.parseNutrientValue($, ['sodium', 'Sodium']),
         totalCarbs: this.parseNutrientValue($, ['total-carbs', 'totalCarbs', 'Total Carbohydrate', 'Carbohydrate']),
         dietaryFiber: this.parseNutrientValue($, ['dietary-fiber', 'dietaryFiber', 'Dietary Fiber', 'Fiber']),
         sugars: this.parseNutrientValue($, ['sugars', 'Sugars', 'Sugar']),
-        addedSugars: this.parseNutrientValue($, ['added-sugars', 'addedSugars', 'Added Sugars']),
         protein: this.parseNutrientValue($, ['protein', 'Protein']),
-        vitaminD: this.parseNutrientValue($, ['vitamin-d', 'vitaminD', 'Vitamin D']),
         calcium: this.parseNutrientValue($, ['calcium', 'Calcium']),
         iron: this.parseNutrientValue($, ['iron', 'Iron']),
         potassium: this.parseNutrientValue($, ['potassium', 'Potassium']),
@@ -145,7 +139,7 @@ export class NutritionParser {
       return nutrition;
       
     } catch (error) {
-      console.error(`❌ Failed to parse nutrition for recipe ${recipeId}:`, error);
+      console.error(`Failed to parse nutrition for recipe ${recipeId}:`, error);
       return null;
     }
   }

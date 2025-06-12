@@ -31,9 +31,9 @@ export type DietaryTag =
     totalCarbs: number;
     dietaryFiber: number;
     sugars: number;
-    calcium?: number;
-    iron?: number;
-    potassium?: number;
+    calcium: number;
+    iron: number;
+    potassium: number;
   }
 /**
  * @interface Menu item document interface

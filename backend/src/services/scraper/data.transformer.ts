@@ -71,18 +71,15 @@ export class DataTransformer {
         calories: nutrition.calories,
         totalFat: nutrition.totalFat,
         saturatedFat: nutrition.saturatedFat,
-        transFat: nutrition.transFat,
         cholesterol: nutrition.cholesterol,
         sodium: nutrition.sodium,
         totalCarbs: nutrition.totalCarbs,
         dietaryFiber: nutrition.dietaryFiber,
         sugars: nutrition.sugars,
-        addedSugars: nutrition.addedSugars,
         protein: nutrition.protein,
-        vitaminD: nutrition.vitaminD,
-        calcium: nutrition.calcium,
-        iron: nutrition.iron,
-        potassium: nutrition.potassium
+        calcium: nutrition.calcium || 0,
+        iron: nutrition.iron || 0,
+        potassium: nutrition.potassium || 0
       },
       dietaryTags: nutrition.dietaryTags as DietaryTag[], // ########## EXPLICIT CAST ################
       lastUpdated: new Date()

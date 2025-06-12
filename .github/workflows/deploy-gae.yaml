@@ -1,0 +1,114 @@
+name: Deploy to Google App Engine
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:  # Allows manual trigger
+
+env:
+  PROJECT_ID: cs144-webapps-ryanrosario-sp25
+  NODE_VERSION: '18'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Test and Build
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+    
+    # Test Backend
+    - name: Install and test backend
+      working-directory: ./backend
+      run: |
+        npm install
+        npm run build
+        npm test -- --passWithNoTests
+    
+    # Build Frontend
+    - name: Install and build frontend
+      working-directory: ./frontend
+      run: |
+        npm install
+        npm run build
+      env:
+        REACT_APP_API_URL: https://${{ env.PROJECT_ID }}.appspot.com/api
+    
+    # Build WebAssembly
+    - name: Build WebAssembly module
+      working-directory: ./frontend/wasm
+      run: |
+        npm install
+        npm run asbuild:release
+        cp build/release.wasm ../public/formulae.wasm
+        cp build/release.js ../public/formulae.js
+    
+    # Copy frontend to backend
+    - name: Prepare deployment
+      run: |
+        rm -rf backend/public
+        mkdir -p backend/public
+        cp -r frontend/build/* backend/public/
+        echo "Contents of backend/public:"
+        ls -la backend/public
+    
+    # Upload artifact for deployment
+    - name: Upload deployment artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: deployment-package
+        path: |
+          backend/dist
+          backend/public
+          backend/package.json
+          backend/package-lock.json
+          backend/app.yaml
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    permissions:
+      contents: read
+      id-token: write
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Download deployment artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: deployment-package
+        path: backend-deploy
+    
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+    
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        project_id: ${{ env.PROJECT_ID }}
+    
+    - name: Deploy to App Engine
+      working-directory: ./backend-deploy
+      run: |
+        gcloud app deploy app.yaml \
+          --project=${{ env.PROJECT_ID }} \
+          --quiet \
+          --promote
+    
+    - name: Verify deployment
+      run: |
+        echo "🚀 Deployed to: https://${{ env.PROJECT_ID }}.appspot.com"
+        echo "Testing API health..."
+        curl -f https://${{ env.PROJECT_ID }}.appspot.com/api/health || echo "Health check failed"

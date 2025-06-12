@@ -5,12 +5,14 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { connectDatabase, checkDatabaseHealth } from './config/database';
 import { connectRedis } from './config/redis';
+import { loadSecrets } from './config/secret-manager'; // ########## NEW IMPORT ################
 import recommendRoutes from './routes/recommend.routes';
 import menuRoutes from './routes/menu.routes';
 import scraperRoutes from './routes/scraper.routes';
-import restaurantRoutes from './routes/restaurant.routes'; // ########## NEW RESTAURANT ROUTES ################
-import apiRoutes from './routes/api.routes'; // ########## NEW API ROUTES ################
+import restaurantRoutes from './routes/restaurant.routes';
+import apiRoutes from './routes/api.routes';
 import { ScraperScheduler } from './services/scraper/scheduler';
+
 // Load environment variables
 dotenv.config();
 
@@ -31,12 +33,23 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// ########## UPDATED ROUTES WITH NEW ENDPOINTS ################
+// ########## APP ENGINE WARMUP HANDLER ################
+app.get('/_ah/warmup', (req: Request, res: Response) => {
+  console.log('Warmup request received');
+  res.status(200).send('Warmed up');
+});
+
+// ########## APP ENGINE HEALTH CHECK ################
+app.get('/_ah/health', async (req: Request, res: Response) => {
+  res.status(200).send('healthy');
+});
+
+// ########## ROUTES ################
 app.use('/api', recommendRoutes);
 app.use('/api/menu', menuRoutes);
 app.use('/api/scraper', scraperRoutes);
-app.use('/api/restaurants', restaurantRoutes); // ########## NEW RESTAURANT ENDPOINTS ################
-app.use('/api', apiRoutes); // ########## NEW UNIFIED API ENDPOINTS ################
+app.use('/api/restaurants', restaurantRoutes);
+app.use('/api', apiRoutes);
 
 // Health check endpoint
 app.get('/api/health', async (req: Request, res: Response) => {
@@ -49,6 +62,8 @@ app.get('/api/health', async (req: Request, res: Response) => {
         api: 'operational',
         database: dbHealthy ? 'connected' : 'disconnected',
       },
+      environment: process.env.NODE_ENV,
+      version: process.env.GAE_VERSION || 'local'
     });
   } catch (error) {
     res.status(503).json({
@@ -72,9 +87,33 @@ app.get('/api', (req: Request, res: Response) => {
   });
 });
 
+// 404 handler
+app.use((req: Request, res: Response) => {
+  res.status(404).json({
+    error: 'Not Found',
+    message: `Cannot ${req.method} ${req.url}`,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Error handler
+app.use((err: any, req: Request, res: Response, next: any) => {
+  console.error('Error:', err);
+  res.status(err.status || 500).json({
+    error: err.message || 'Internal Server Error',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Start server
 const startServer = async () => {
   try {
+    // ########## LOAD SECRETS FROM GOOGLE SECRET MANAGER ################
+    if (process.env.NODE_ENV === 'production') {
+      console.log('🔐 Loading secrets from Google Secret Manager...');
+      await loadSecrets();
+    }
+    
     // Connect to MongoDB
     await connectDatabase();
     
@@ -83,9 +122,16 @@ const startServer = async () => {
     
     // Start Express server
     app.listen(PORT, () => {
-      console.log(`🚀 Server is running on http://localhost:${PORT}`);
+      console.log(`🚀 Server is running on port ${PORT}`);
       console.log(`📡 API Health: http://localhost:${PORT}/api/health`);
-      console.log(`🎯 Frontend CORS enabled for: http://localhost:3000`);
+      console.log(`🎯 Frontend CORS enabled for: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
+      console.log(`🌍 Environment: ${process.env.NODE_ENV}`);
+      
+      if (process.env.GAE_SERVICE) {
+        console.log(`☁️  Running on Google App Engine`);
+        console.log(`📦 Service: ${process.env.GAE_SERVICE}`);
+        console.log(`🏷️  Version: ${process.env.GAE_VERSION}`);
+      }
     });
   } catch (error) {
     console.error('Failed to start server:', error);
@@ -95,9 +141,11 @@ const startServer = async () => {
 
 // ########## INITIALIZE SCRAPER SCHEDULER ################
 const scraperScheduler = new ScraperScheduler();
-scraperScheduler.initializeSchedule();
+if (process.env.SCRAPER_ENABLED === 'true') {
+  scraperScheduler.initializeSchedule();
+}
 
-// Update graceful shutdown handlers
+// Graceful shutdown handlers
 process.on('SIGTERM', async () => {
   console.log('SIGTERM received, shutting down gracefully...');
   scraperScheduler.stop();

@@ -13,7 +13,7 @@ automatic_scaling:
   max_instances: 10
   min_idle_instances: 0
   max_idle_instances: 1
-  min_pending_latency: 30s
+  min_pending_latency: 10s  # ########## FIXED: Changed from 30s to 10s ################
   max_pending_latency: automatic
   max_concurrent_requests: 50
 
@@ -23,7 +23,7 @@ env_variables:
   PORT: "8080"
   FRONTEND_URL: "https://cs144-webapps-ryanrosario-sp25.appspot.com"
   SCRAPER_ENABLED: "true"
-  SCRAPER_SCHEDULE: "0 11 * * *"  
+  SCRAPER_SCHEDULE: "0 11 * * *"  # 4 AM PST = 11 AM UTC
 
 # Request handlers
 handlers:
@@ -59,10 +59,6 @@ handlers:
 inbound_services:
   - warmup
 
-# VPC connector for MongoDB Atlas and Redis Cloud
-vpc_access_connector:
-  name: projects/nutri-bruin-cs144/locations/us-central1/connectors/nutribruin-connector
-
 # Health check configuration
 readiness_check:
   path: "/api/health"
@@ -79,3 +75,7 @@ liveness_check:
   failure_threshold: 2
   success_threshold: 2
   initial_delay_sec: 300
+
+# Skip VPC connector if not set up
+# vpc_access_connector:
+#   name: projects/cs144-webapps-ryanrosario-sp25/locations/us-central1/connectors/nutribruin-connector

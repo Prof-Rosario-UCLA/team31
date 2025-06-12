@@ -59,11 +59,11 @@ const NutritionDashboard: React.FC = () => {
   };
 
   /// OLD SORT JUST FOR PLACEHOLDER REAL SORTER BELOW ///
-  const sortedHalls = [...diningHalls]
-  .map(h => ({...h, distance: (!wasm || !userLocation)
-      ? Infinity : wasm.haversine(userLocation.lat, userLocation.lng, h.coords.lat, h.coords.lng)
-  }))
-  .sort((a, b) => b.distance - a.distance);
+  // const sortedHalls = [...diningHalls]
+  // .map(h => ({...h, distance: (!wasm || !userLocation)
+  //     ? Infinity : wasm.haversine(userLocation.lat, userLocation.lng, h.coords.lat, h.coords.lng)
+  // }))
+  // .sort((a, b) => b.distance - a.distance);
 
   /// REAL SORTER WITH ACTUAL LOGIC FOR ALL 3 CRITERIA ///
   const sortHalls = () => {
@@ -172,7 +172,7 @@ const NutritionDashboard: React.FC = () => {
           {goal === "volume" && "Volume"}
         </h3>
         <div className="scroll-box">
-          {sortedHalls.map((hall, idx) => {const [dist, cal] = getDistanceAndCalories(hall.coords);
+          {sortHalls().map((hall, idx) => {const [dist, cal] = getDistanceAndCalories(hall.coords);
           
           return (
             <div className={`restaurant-card ${getCardColor(idx)}`} key={hall.id}>
@@ -195,55 +195,6 @@ const NutritionDashboard: React.FC = () => {
           {goal === "volume" && "Today's Top Volume Foods"}
         </h3>
         <div className="top-foods-list scroll-box">
-          <div className="food-card darkblue">
-            <div>
-              <span aria-hidden="true">🥇</span> <b>Chicken Breast</b> - <em>BPlate</em>
-            </div>
-            <div>P/C: 1.0 - 180 Calories, 18g Protein</div>
-          </div>
-          <div className="food-card blue">
-            <div>
-              <span aria-hidden="true">🥈</span> <b>Grilled Steak</b> - <em>BPlate</em>
-            </div>
-            <div>P/C: 0.9 - 200 Calories, 18g Protein</div>
-          </div>
-          <div className="food-card lightblue">
-            <div>
-              <span aria-hidden="true">🥉</span> <b>Scrambled Eggs</b> - <em>De Neve</em>
-            </div>
-            <div>P/C: 0.6 - 91 Calories, 6g Protein</div>
-          </div>
-
-          <div className="food-card gray">
-            <div>
-              <b>Cheerios</b> - <em>De Neve</em>
-            </div>
-            <div>P/C: 0.3 - 100 Calories, 3g Protein</div>
-          </div>
-
-          <div className="food-card gray">
-            <div>
-              <b>Tart Frozen Yogurt</b> - <em>BPlate</em>
-            </div>
-            <div>P/C: 0.16 - 120 Calories, 2g Protein</div>
-          </div>
-
-          <div className="food-card gray">
-            <div>
-              <b>XXX</b> - <em>BPlate</em>
-            </div>
-            <div>P/C: 0.00 - 0.00 Calories, 0.00g Protein</div>
-          </div>
-
-          <div className="food-card gray">
-            <div>
-              <b>XXX</b> - <em>BPlate</em>
-            </div>
-            <div>P/C: 0.00 - 0.00 Calories, 0.00g Protein</div>
-          </div>
-
-        </div>
-        {/* <div className="top-foods-list scroll-box">
           {sortFoods().slice(0, MAX_FOOD_DISPLAY).map((food, idx) => (
             <div className={`food-card ${getCardColor(idx)}`} key={`${food.name}-${idx}`}>
               <div>
@@ -255,7 +206,7 @@ const NutritionDashboard: React.FC = () => {
               </div>
             </div>
           ))}
-        </div> */}
+        </div>
       </section>
     </div>
   );
